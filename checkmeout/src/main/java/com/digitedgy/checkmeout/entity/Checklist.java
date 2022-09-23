@@ -23,8 +23,11 @@ public class Checklist {
     private String sopNumber;
     @Column(columnDefinition = "text")
     private String template;
+    @Column(columnDefinition = "text")
+    private String description;
     private String changeControlReference;
     private String state;
+
 
     @CreatedBy
     @JsonIgnore
@@ -81,6 +84,14 @@ public class Checklist {
 
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getChangeControlReference() {
