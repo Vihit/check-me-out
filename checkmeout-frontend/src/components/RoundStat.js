@@ -4,7 +4,7 @@ import "./RoundStat.css";
 function RoundStat(props) {
   let history = useHistory();
   function navigate(link) {
-    history.push(link);
+    history.push(link, props);
   }
   return (
     <div className="stat-container" onClick={() => navigate(props.link)}>

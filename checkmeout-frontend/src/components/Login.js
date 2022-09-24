@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Login.css";
 import { config } from "./config";
+import jwt from "jwt-decode";
 
 function Login(props) {
   const [username, setUsername] = useState("");
@@ -29,8 +30,11 @@ function Login(props) {
         else throw new Error("Login Unsuccessful!");
       })
       .then((actualData) => {
-        console.log(actualData);
         localStorage.setItem("access", JSON.stringify(actualData));
+        localStorage.setItem(
+          "user",
+          JSON.stringify(jwt(actualData["access_token"]))
+        );
         props.onLogin();
       });
   }

@@ -42,7 +42,9 @@ function Navbar(props) {
           <i className="fas fa-user-circle icon-account"></i>
         </div>
         <ul className={"dropdown " + (accountClick ? "show" : "")}>
-          <li className="dropdown-item user">Admin</li>
+          <li className="dropdown-item user">
+            {JSON.parse(localStorage.getItem("user"))["firstName"]}
+          </li>
           <li className="dropdown-item" onClick={handleLogout}>
             Logout
           </li>

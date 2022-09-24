@@ -1,6 +1,7 @@
 .created-checklists {
   /* height: 92vh; */
-  width: 100%;
+  /* width: 100%; */
+  padding: 30px;
 }
 
 .page-header {
@@ -20,6 +21,7 @@
   flex-wrap: wrap;
   /* margin: 30px; */
   width: 100%;
+  /* height: 250px; */
 }
 
 .create-checklist-btn {
@@ -31,4 +33,28 @@
   text-align: center;
   cursor: pointer;
   font-weight: normal;
+}
+
+.header-bg {
+  background-color: #216176;
+  color: var(--white);
+}
+
+.clr-white {
+  color: var(--white);
+}
+
+.cont-bg {
+  background-color: #00cfa0;
+}
+
+.cont-bg-review {
+  background-color: #008ec5;
+}
+
+.cont-bg-archive {
+  background-color: #4a5b9c;
+}
+.cont-bg-draft {
+  background-color: #a7b9b5;
 }

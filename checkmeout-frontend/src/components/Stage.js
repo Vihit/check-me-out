@@ -12,15 +12,16 @@ function Stage(props) {
   const [toggleVal, setToggleVal] = useState(props.stage.name !== "");
   const [tasks, setTasks] = useState(
     props.stage.tasks.map((val, idx) => {
-      return (
-        <Task
-          number={idx + 1}
-          key={idx + 1}
-          removeTask={removeTask}
-          updateTask={updateTask}
-          task={val}
-        ></Task>
-      );
+      if (val !== null)
+        return (
+          <Task
+            number={idx + 1}
+            key={idx + 1}
+            removeTask={removeTask}
+            updateTask={updateTask}
+            task={val}
+          ></Task>
+        );
     })
   );
   const [name, setName] = useState(props.stage.name);
@@ -88,7 +89,7 @@ function Stage(props) {
     });
     setTaskJson((prev) => {
       const updated = [...prev];
-      updated.splice(id - 1, 1, {});
+      updated.splice(id - 1, 1, null);
       return updated;
     });
   }

@@ -33,7 +33,7 @@ function App() {
           <Route exact path="/checklist" component={CreateChecklist}></Route>
           <Route
             exact
-            path="/created-jobs"
+            path="/created-checklists"
             component={CreatedChecklists}
           ></Route>
         </div>

@@ -12,7 +12,17 @@ function ChecklistCard(props) {
       <div className="cl-details">
         <div className="cl-card-id">
           #{props.checklist.id}
-          <div className="published-ind"></div>
+          <div
+            className={
+              props.checklist.state === "Published"
+                ? "published-ind"
+                : props.checklist.state === "In Review"
+                ? "review-ind"
+                : props.checklist.state === "Draft"
+                ? "draft-ind"
+                : "archive-ind"
+            }
+          ></div>
         </div>
         <div className="cl-card-name">{props.checklist.name}</div>
         <div className="cl-card-sub-detail">

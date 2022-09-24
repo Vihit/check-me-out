@@ -8,15 +8,16 @@ function CreateChecklist(props) {
   let location = useLocation();
   const [stages, setStages] = useState(
     JSON.parse(location.state.checklist.template)["stages"].map((val, idx) => {
-      return (
-        <Stage
-          key={idx + 1}
-          number={idx + 1}
-          removeStage={removeStage}
-          updateStage={updateStage}
-          stage={val}
-        ></Stage>
-      );
+      if (val !== null)
+        return (
+          <Stage
+            key={idx + 1}
+            number={idx + 1}
+            removeStage={removeStage}
+            updateStage={updateStage}
+            stage={val}
+          ></Stage>
+        );
     })
   );
   const [clName, setClName] = useState(location.state.checklist.name);
@@ -38,9 +39,6 @@ function CreateChecklist(props) {
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
 
-  useEffect(() => {
-    console.log(props);
-  }, []);
   function updateChecklistJson(state) {
     const newCLJson = {
       name: clName,
@@ -100,7 +98,7 @@ function CreateChecklist(props) {
     });
     setStageJson((prev) => {
       const updated = [...prev];
-      updated.splice(id - 1, 1, {});
+      updated.splice(id - 1, 1, null);
       return updated;
     });
   }
@@ -130,7 +128,7 @@ function CreateChecklist(props) {
         throw new Error("Some error occurred!");
       })
       .then((actualData) => {})
-      .catch(function (error) {
+      .catch(function(error) {
         console.log("Some error occurred!", error);
       });
   }

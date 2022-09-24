@@ -6,17 +6,18 @@ function Task(props) {
   const newCLActivity = { type: "checklist", checklistData: [] };
   const [activities, setActivities] = useState(
     props.task.activities.map((val, idx) => {
-      if (val.type === "checklist") {
-        return (
-          <ChecklistActivity
-            key={idx}
-            id={idx}
-            removeCLActivity={removeCLActivity}
-            updateCL={updateCL}
-            checklist={val}
-          ></ChecklistActivity>
-        );
-      }
+      if (val !== null)
+        if (val.type === "checklist") {
+          return (
+            <ChecklistActivity
+              key={idx}
+              id={idx}
+              removeCLActivity={removeCLActivity}
+              updateCL={updateCL}
+              checklist={val}
+            ></ChecklistActivity>
+          );
+        }
     })
   );
   const [activitySelected, setActivitySelected] = useState(0);
@@ -73,7 +74,7 @@ function Task(props) {
     });
     setActivityJson((prev) => {
       const updated = [...prev];
-      updated.splice(id, 1, {});
+      updated.splice(id, 1, null);
       return updated;
     });
   }
