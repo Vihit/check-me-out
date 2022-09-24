@@ -1,0 +1,26 @@
+.stat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Poppins;
+  font-size: 20px;
+  font-weight: bold;
+  color: #2f4858;
+  cursor: pointer;
+}
+
+.round-stat {
+  height: 250px;
+  width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 80px;
+  color: white;
+  border-radius: 100%;
+}
+
+.stat-label {
+  margin-top: 20px;
+}

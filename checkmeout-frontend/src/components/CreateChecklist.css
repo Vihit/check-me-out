@@ -1,0 +1,70 @@
+.cl-detail-section {
+  margin: 20px 30px 0px 30px;
+}
+
+.full-width-control {
+  width: 100%;
+}
+
+.beside-control {
+  margin-right: 20px;
+}
+
+.name-control::placeholder {
+  text-align: left;
+  vertical-align: middle;
+  padding-left: 10px;
+}
+
+.add-a-stage {
+  display: flex;
+  height: 35px;
+  border-style: solid;
+  border-radius: 20px;
+  border-width: 3px;
+  border-color: #e9e7fd;
+  margin: 20px 30px 0px 30px;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 30px 0px 30px;
+  color: #372b47;
+  font-family: "Poppins";
+  font-weight: bold;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.draft-btn {
+  margin-top: 20px;
+  margin-right: 20px;
+  padding: 15px 30px 15px 30px;
+  background-color: #d9d9d9;
+  font-family: "Poppins";
+  font-weight: bold;
+  color: #372b47;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.review-btn {
+  margin-top: 20px;
+  margin-right: 20px;
+  padding: 15px 30px 15px 30px;
+  background-color: #48e399;
+  font-family: "Poppins";
+  font-weight: bold;
+  color: #372b47;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* .stg-area {
+  overflow-y: auto;
+  height: 480px;
+} */
