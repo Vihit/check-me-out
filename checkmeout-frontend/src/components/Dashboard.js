@@ -1,14 +1,44 @@
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import "./Dashboard.css";
 import RoundStat from "./RoundStat";
+import { config } from "./config.js";
 
 function Dashboard() {
+  const [checklists, setChecklists] = useState([]);
+  useEffect(() => {
+    getChecklists();
+  }, []);
+  let history = useHistory();
+
+  function getChecklists() {
+    fetch(config.apiUrl + "checklist/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((actualData) => {
+        setChecklists(actualData);
+      });
+  }
+
   return (
     <div className="dashboard-container">
       <RoundStat
         color="#00BCB7"
-        label="Created by you"
-        value="12"
-        link="/created-jobs"
+        label="Total Checklists"
+        value={checklists.length}
+        link="/created-checklists"
+        checklists={checklists}
       ></RoundStat>
       <RoundStat
         color="#008EC5"

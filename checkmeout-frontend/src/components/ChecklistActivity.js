@@ -49,7 +49,7 @@ function ChecklistActivity(props) {
         return (
           <div className="checklist-with-delete">
             <div className="checklist">
-              <input type="checkbox"></input>
+              <input type="checkbox" disabled></input>
               {val}
             </div>
             {!locked && (
