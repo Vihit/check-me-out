@@ -1,5 +1,6 @@
 import "./Dashboard.css";
 import RoundStat from "./RoundStat";
+import React from "react";
 
 function Dashboard() {
   return (

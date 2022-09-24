@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Task.css";
 import ChecklistActivity from "./ChecklistActivity";
+import React from "react";
 
 function Task(props) {
   const newCLActivity = { type: "checklist", checklistData: [] };

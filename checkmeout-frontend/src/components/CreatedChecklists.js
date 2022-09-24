@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import ChecklistCard from "./ChecklistCard";
 import "./CreatedChecklists.css";
 import { config } from "./config";
+import React from "react";
 
 function CreatedChecklists() {
   const [checklists, setChecklists] = useState([]);

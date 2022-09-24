@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Stage.css";
 import Task from "./Task";
+import React from "react";
 
 function Stage(props) {
   const newTask = {

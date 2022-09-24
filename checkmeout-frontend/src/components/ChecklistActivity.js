@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./ChecklistActivity.css";
+import React from "react";
 
 function ChecklistActivity(props) {
   const [newCLItem, setNewCLItem] = useState("");

@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Navbar.css";
 import { Link, useHistory } from "react-router-dom";
 import { config } from "./config";
+import React from "react";
 
 function Navbar(props) {
   const [accountClick, setAccountClick] = useState(false);

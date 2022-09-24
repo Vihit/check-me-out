@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import { Route, useHistory } from "react-router-dom";
 import CreatedChecklists from "./components/CreatedChecklists";
 import CreateChecklist from "./components/CreateChecklist";
+import React from "react";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);

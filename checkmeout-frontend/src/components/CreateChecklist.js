@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import "./CreateChecklist.css";
 import Stage from "./Stage";
 import { config } from "./config";
+import React from "react";
 
 function CreateChecklist(props) {
   let location = useLocation();
@@ -130,7 +131,7 @@ function CreateChecklist(props) {
         throw new Error("Some error occurred!");
       })
       .then((actualData) => {})
-      .catch(function (error) {
+      .catch(function(error) {
         console.log("Some error occurred!", error);
       });
   }
