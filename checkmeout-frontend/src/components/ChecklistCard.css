@@ -1,0 +1,80 @@
+.checklist-card {
+  /* height: 140px; */
+  width: 21%;
+  background-color: white;
+  margin-left: 2.25%;
+  margin-bottom: 2.5%;
+  border-radius: 20px;
+  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.cl-details {
+  width: 100%;
+}
+
+.cl-card-id {
+  font-family: "Poppins";
+  font-weight: bold;
+  font-size: 18px;
+  color: #216176;
+  margin-left: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cl-card-name {
+  font-family: "Poppins";
+  font-weight: bold;
+  font-size: 15px;
+  color: #216176;
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
+
+.cl-card-sub-detail {
+  font-family: "Poppins";
+  font-size: 14px;
+  margin-left: 5px;
+  font-style: italic;
+  color: #216176;
+}
+
+.cl-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.edit-btn {
+  margin-right: 15px;
+  color: #216176;
+  font-size: 20px;
+}
+
+.archive-btn {
+  margin-right: 5px;
+  color: #216176;
+  font-size: 20px;
+}
+
+.published-ind {
+  height: 15px;
+  width: 15px;
+  background-color: #00cfa0;
+  margin-right: 5px;
+  color: #00cfa0;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 100%;
+  border-color: #09ab86;
+}

@@ -1,0 +1,41 @@
+:root {
+  --main: #00cfa0;
+  --white: #ecfdf6;
+  --dark: #00989d;
+  --black: #372b47;
+}
+
+.App {
+  text-align: center;
+  height: 100vh;
+  background-color: var(--white);
+}
+
+a {
+  text-decoration: none;
+  color: var(--white);
+}
+
+a:visited {
+  color: var(--white);
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 12%;
+  left: 45%;
+  width: 15%;
+  height: 50px;
+  background-color: var(--main);
+  border-radius: 10px;
+  z-index: 100;
+  color: white;
+  font-family: "Poppins";
+}
+
+.notification-hidden {
+  display: none;
+}

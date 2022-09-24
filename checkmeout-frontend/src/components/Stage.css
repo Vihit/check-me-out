@@ -1,0 +1,115 @@
+.stage-container {
+  margin: 20px 30px 0px 30px;
+}
+
+.stage-header {
+  display: flex;
+  height: 35px;
+  border-style: solid;
+  border-radius: 20px;
+  border-width: 2px;
+  justify-content: space-between;
+  padding-right: 20px;
+  padding-left: 20px;
+  align-items: center;
+  color: #372b47;
+  font-family: "Poppins";
+  font-weight: bold;
+}
+
+.trash {
+  font-size: 20px;
+  margin-right: 20px;
+  color: red;
+  cursor: pointer;
+}
+.toggler {
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.drawer {
+  display: flex;
+  justify-content: right;
+  flex-grow: 0.98;
+}
+
+.animate-drawer {
+  animation: rotate 1s 1 forwards;
+}
+
+.toggler:active {
+  animation: rotate 1s 1 forwards;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotateZ(180deg);
+  }
+}
+
+.stage-task-container {
+  width: 98%;
+  border-style: solid;
+  border-width: 2px;
+  position: relative;
+  border-top: 0;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  padding-bottom: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 15px;
+}
+
+.closed {
+  display: none;
+  overflow: hidden;
+  height: 0%;
+  padding: 0px;
+}
+
+.stage-detail-container {
+  width: 30%;
+  height: 85px;
+  background-color: #e9e7fd;
+  border-radius: 20px;
+  margin: 10px 20px 0px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.stage-name-control {
+  margin-top: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.task-detail-container {
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 20px 0px 20px;
+  flex-direction: column;
+}
+
+.add-a-task {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  border-radius: 20px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #fee4cb;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+  font-family: "Poppins";
+  font-weight: bold;
+  color: #372b47;
+  cursor: pointer;
+  background-color: white;
+  margin-bottom: 15px;
+}
