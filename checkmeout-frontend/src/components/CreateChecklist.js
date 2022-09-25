@@ -38,6 +38,9 @@ function CreateChecklist(props) {
   const [clReq, setclReq] = useState({});
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
+  const [reviewer, setReviewer] = useState("Cancel");
+  const [reviewers, setReviewers] = useState([]);
+  const [finalReview, setFinalReview] = useState(false);
 
   function updateChecklistJson(state) {
     const newCLJson = {
@@ -105,8 +108,39 @@ function CreateChecklist(props) {
 
   function sendToDraft() {
     const newClReq = updateChecklistJson("Draft");
+    postPutChecklist(newClReq);
+  }
+
+  function sendToReview() {
+    if (!finalReview) {
+      getReviewers();
+      setReviewer("");
+      setFinalReview(true);
+    } else {
+      if (reviewer !== "" && reviewer !== "Cancel") {
+        const newClReq = updateChecklistJson("In Review");
+        newClReq["reviewBy"] = reviewer;
+        postPutChecklist(newClReq);
+        setFinalReview(false);
+        setReviewer("Cancel");
+      }
+    }
+  }
+
+  function reviewerChanged(reviewer) {
+    if (reviewer === "Cancel") {
+      setFinalReview(false);
+    }
+    setReviewer(reviewer);
+  }
+  function postPutChecklist(clReq) {
+    const method = location.state.checklist.id !== null ? "POST" : "POST";
+    const newClReq = clReq;
+    if (location.state.checklist.id !== null)
+      newClReq["id"] = location.state.checklist.id;
+
     fetch(config.apiUrl + "checklist/", {
-      method: "POST",
+      method: method,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -118,7 +152,7 @@ function CreateChecklist(props) {
       .then((response) => {
         if (response.ok) {
           setAlert(true);
-          setAlertContent("Checklist added!");
+          setAlertContent("Checklist submitted!");
           const timeId = setTimeout(() => {
             setAlert(false);
             setAlertContent("");
@@ -128,7 +162,35 @@ function CreateChecklist(props) {
         throw new Error("Some error occurred!");
       })
       .then((actualData) => {})
-      .catch(function(error) {
+      .catch(function (error) {
+        console.log("Some error occurred!", error);
+      });
+  }
+
+  function getReviewers() {
+    fetch(
+      config.apiUrl +
+        "users/roles/?roles=ROLE_SUPERVISOR,ROLE_PRODUCTION_MANAGER,ROLE_QA,ROLE_SYSTEM_ADMIN",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization:
+            "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Some error occurred!");
+      })
+      .then((actualData) => {
+        setReviewers(actualData);
+      })
+      .catch(function (error) {
         console.log("Some error occurred!", error);
       });
   }
@@ -193,7 +255,32 @@ function CreateChecklist(props) {
         <div className="draft-btn" onClick={sendToDraft}>
           Save to Draft
         </div>
-        <div className="review-btn">Send to Review</div>
+        <div
+          className={"reviewers " + (reviewer !== "Cancel" ? " " : "hidden")}
+        >
+          <div>
+            <select
+              value={reviewer}
+              onChange={(e) => reviewerChanged(e.target.value)}
+              className={reviewer !== "Cancel" ? " " : "hidden"}
+              placeholder="Choose Reviewer"
+            >
+              <option value="">Choose Reviewer</option>
+              <option value="Cancel">Cancel</option>
+              {reviewers.map((val, idx) => {
+                return (
+                  <option value={val.username} key={idx}>
+                    {val.first_name + " " + val.last_name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
+
+        <div className="review-btn" onClick={sendToReview}>
+          {finalReview ? "Submit" : "Send to Review"}
+        </div>
       </div>
     </div>
   );

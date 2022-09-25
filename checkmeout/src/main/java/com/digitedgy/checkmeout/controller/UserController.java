@@ -37,6 +37,13 @@ public class UserController {
         return new ResponseEntity<>(resultUser, HttpStatus.OK);
     }
 
+    @GetMapping("/roles/")
+    public ResponseEntity<?> getUsersWithRoles(@RequestParam(name = "roles") String roles) {
+        System.out.println(roles);
+        Iterable<User> users = userService.findAllWithRoles(roles);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @PostMapping("/")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         Optional<User> existingUser = userService.getUserByUsername(user.getUsername());

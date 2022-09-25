@@ -44,4 +44,10 @@ public class ChecklistController {
         Checklist savedChecklist = checklistService.save(checklist);
         return new ResponseEntity<>(savedChecklist, HttpStatus.OK);
     }
+
+    @PutMapping("/")
+    public ResponseEntity<?> updateChecklist(@RequestBody Checklist checklist) {
+        Checklist savedChecklist = checklistService.save(checklist);
+        return new ResponseEntity<>(savedChecklist, HttpStatus.OK);
+    }
 }
