@@ -30,18 +30,13 @@ public class Checklist {
 
 
     @CreatedBy
-    @JsonIgnore
     @Column(name = "created_by")
     private String createdBy;
-    @JsonIgnore
     @Column(name="create_dt")
     @CreationTimestamp
     private Timestamp createDt;
     @Column(name = "review_by")
-    @JsonIgnore
-    @LastModifiedBy
     private String reviewBy;
-    @JsonIgnore
     @Column(name="review_dt")
     @UpdateTimestamp
     private Timestamp reviewDt;

@@ -52,4 +52,8 @@ public class UserService implements ApplicationListener<AuthenticationSuccessEve
 
         return userRepository.save(newUser);
     }
+
+    public Iterable<User> findAllWithRoles(String roles) {
+        return userRepository.findAllWithRoles(roles.split(","));
+    }
 }

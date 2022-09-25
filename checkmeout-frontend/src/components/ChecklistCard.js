@@ -34,11 +34,23 @@ function ChecklistCard(props) {
         </div>
       </div>
       <div className="cl-actions">
+        {props.checklist.state === "Published" ? (
+          <div>
+            <span data-title="Create a Job">
+              <i class="fa-solid fa-square-plus edit-btn"></i>
+            </span>
+          </div>
+        ) : null}
         <div>
-          <i className="fa-solid fa-pen edit-btn"></i>
-        </div>
-        <div>
-          <i className="fa-solid fa-box archive-btn"></i>
+          {props.checklist.state === "Archive" ? (
+            <span data-title="Unarchive">
+              <i className="fa-solid fa-box-open archive-btn"></i>
+            </span>
+          ) : (
+            <span data-title="Archive">
+              <i className="fa-solid fa-box archive-btn"></i>
+            </span>
+          )}
         </div>
       </div>
     </div>
