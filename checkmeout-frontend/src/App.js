@@ -8,11 +8,13 @@ import { Route, useHistory } from "react-router-dom";
 import CreatedChecklists from "./components/CreatedChecklists";
 import CreateChecklist from "./components/CreateChecklist";
 import ChecklistContext from "./context/ChecklistContext";
+import { type } from "@testing-library/user-event/dist/type";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
   const [cls, setCls] = useState([]);
+  const [types, setTypes] = useState([]);
   function setContextChecklists(checklists) {
     setCls((prev) => checklists);
   }
@@ -22,11 +24,14 @@ function App() {
       for (let i = 0; i < prev.length; i++) {
         if (prev[i].id === checklist.id) idx = i;
       }
-      console.log("Idx is " + idx);
       const updated = [...prev];
       updated.splice(idx, 1, checklist);
       return updated;
     });
+  }
+
+  function updateTypes(types) {
+    setTypes((prev) => types);
   }
 
   function loginHandler() {
@@ -45,6 +50,8 @@ function App() {
         checklists: cls,
         setContextChecklists: setContextChecklists,
         updateClAt: updateClAt,
+        types: types,
+        updateTypes: updateTypes,
       }}
     >
       <div>

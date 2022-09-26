@@ -12,9 +12,15 @@ function ChecklistCard(props) {
   const [equipment, setEquipment] = useState("");
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
+  const [names, setNames] = useState([]);
 
   function openChecklist(checkList) {
     history.push("checklist", checkList);
+  }
+
+  function createJobBtn() {
+    getEquipmentNamesFor(props.checklist.equipmentType);
+    setShowCreateJob(true);
   }
 
   function cancelJobCreation() {
@@ -66,6 +72,26 @@ function ChecklistCard(props) {
       });
   }
 
+  function getEquipmentNamesFor(type) {
+    fetch(config.apiUrl + "master/equipment/names/" + type, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((actualData) => {
+        setNames(actualData);
+      });
+  }
+
   return (
     <div className="checklist-card">
       <div className="cl-details" onClick={() => openChecklist(props)}>
@@ -94,7 +120,7 @@ function ChecklistCard(props) {
       </div>
       <div className="cl-actions">
         {props.checklist.state === "Published" ? (
-          <div onClick={() => setShowCreateJob(true)}>
+          <div onClick={() => createJobBtn()}>
             <span data-title="Create a Job">
               <i className="fa-solid fa-square-plus edit-btn"></i>
             </span>
@@ -126,7 +152,14 @@ function ChecklistCard(props) {
                 onChange={(e) => setEquipment(e.target.value)}
                 rows="1"
               >
-                <option>Sample 1</option>
+                <option>Equipment Name</option>
+                {names.map((val, idx) => {
+                  return (
+                    <option key={idx} value={val.data.equipment_name}>
+                      {val.data.equipment_name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>

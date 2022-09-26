@@ -10,6 +10,7 @@ function Dashboard() {
   // const [checklists, setChecklists] = useState([]);
   useEffect(() => {
     getChecklists();
+    getEquipmentTypes();
   }, []);
   let history = useHistory();
 
@@ -30,6 +31,26 @@ function Dashboard() {
       })
       .then((actualData) => {
         clCtx.setContextChecklists(actualData);
+      });
+  }
+
+  function getEquipmentTypes() {
+    fetch(config.apiUrl + "master/equipment/types/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((actualData) => {
+        clCtx.updateTypes(actualData);
       });
   }
 

@@ -47,7 +47,7 @@ function ChecklistActivity(props) {
       </div>
       {checklist.map((val, idx) => {
         return (
-          <div className="checklist-with-delete">
+          <div key={idx} className="checklist-with-delete">
             <div className="checklist">
               <input type="checkbox" disabled></input>
               {val}
