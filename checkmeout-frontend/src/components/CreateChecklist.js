@@ -4,9 +4,11 @@ import "./CreateChecklist.css";
 import Stage from "./Stage";
 import { config } from "./config";
 import ChecklistContext from "../context/ChecklistContext";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function CreateChecklist(props) {
   let location = useLocation();
+  let history = useHistory();
   const clCtx = useContext(ChecklistContext);
   const [stages, setStages] = useState(
     JSON.parse(location.state.checklist.template)["stages"].map((val, idx) => {
@@ -43,6 +45,19 @@ function CreateChecklist(props) {
   const [reviewer, setReviewer] = useState("Cancel");
   const [reviewers, setReviewers] = useState([]);
   const [finalReview, setFinalReview] = useState(false);
+  const [editable, setEditable] = useState(false);
+
+  useEffect(() => {
+    if (location.state.checklist.created_by === null) setEditable(true);
+    else if (
+      JSON.parse(localStorage.getItem("user"))["sub"] ===
+      location.state.checklist.createdBy
+    ) {
+      setEditable(true);
+    } else {
+      console.log("Editable is false");
+    }
+  }, []);
 
   function updateChecklistJson(state) {
     const newCLJson = {
@@ -136,9 +151,9 @@ function CreateChecklist(props) {
     setReviewer(reviewer);
   }
   function postPutChecklist(clReq) {
-    const method = location.state.checklist.id !== null ? "POST" : "POST";
+    const method = location.state.checklist.id !== undefined ? "PUT" : "POST";
     const newClReq = clReq;
-    if (location.state.checklist.id !== null)
+    if (location.state.checklist.id !== undefined)
       newClReq["id"] = location.state.checklist.id;
 
     fetch(config.apiUrl + "checklist/", {
@@ -163,7 +178,11 @@ function CreateChecklist(props) {
         }
         throw new Error("Some error occurred!");
       })
-      .then((actualData) => {})
+      .then((actualData) => {
+        if (method === "POST") clCtx.addCl(actualData);
+        else clCtx.updateClAt(actualData);
+        history.goBack();
+      })
       .catch(function (error) {
         console.log("Some error occurred!", error);
       });

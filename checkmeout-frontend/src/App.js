@@ -18,6 +18,9 @@ function App() {
   function setContextChecklists(checklists) {
     setCls((prev) => checklists);
   }
+  function addCl(checklist) {
+    setCls((prev) => [...prev, checklist]);
+  }
   function updateClAt(checklist) {
     setCls((prev) => {
       let idx = 0;
@@ -52,6 +55,7 @@ function App() {
         updateClAt: updateClAt,
         types: types,
         updateTypes: updateTypes,
+        addCl: addCl,
       }}
     >
       <div>
