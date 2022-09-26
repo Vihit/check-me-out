@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import "./Dashboard.css";
 import RoundStat from "./RoundStat";
 import { config } from "./config.js";
+import ChecklistContext from "../context/ChecklistContext";
 
 function Dashboard() {
-  const [checklists, setChecklists] = useState([]);
+  const clCtx = useContext(ChecklistContext);
+  // const [checklists, setChecklists] = useState([]);
   useEffect(() => {
     getChecklists();
   }, []);
@@ -27,7 +29,7 @@ function Dashboard() {
         }
       })
       .then((actualData) => {
-        setChecklists(actualData);
+        clCtx.setContextChecklists(actualData);
       });
   }
 
@@ -36,9 +38,8 @@ function Dashboard() {
       <RoundStat
         color="#00BCB7"
         label="Total Checklists"
-        value={checklists.length}
+        value={clCtx.checklists.length}
         link="/created-checklists"
-        checklists={checklists}
       ></RoundStat>
       <RoundStat
         color="#008EC5"

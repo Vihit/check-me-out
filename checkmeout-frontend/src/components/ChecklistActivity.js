@@ -34,13 +34,13 @@ function ChecklistActivity(props) {
         ></i>
         {!locked && (
           <i
-            class="fa-solid fa-unlock lock-cl"
+            className="fa-solid fa-unlock lock-cl"
             onClick={() => setLocked(true)}
           ></i>
         )}
         {locked && (
           <i
-            class="fa-solid fa-lock unlock-cl"
+            className="fa-solid fa-lock unlock-cl"
             onClick={() => setLocked(false)}
           ></i>
         )}
@@ -54,7 +54,7 @@ function ChecklistActivity(props) {
             </div>
             {!locked && (
               <i
-                class="fa-sharp fa-solid fa-xmark cancel-cl"
+                className="fa-sharp fa-solid fa-xmark cancel-cl"
                 onClick={() => deleteCLItem(idx)}
               ></i>
             )}

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import ChecklistCard from "./ChecklistCard";
 import "./CreatedChecklists.css";
 import { config } from "./config";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import ChecklistContext from "../context/ChecklistContext";
 
 function CreatedChecklists() {
   let history = useHistory();
-  let location = useLocation();
-  const [checklists, setChecklists] = useState(location.state.checklists);
+  const clCtx = useContext(ChecklistContext);
   const [pubToggleVal, setPubToggleVal] = useState(false);
   const [reviewToggleVal, setReviewToggleVal] = useState(false);
   const [draftToggleVal, setDraftToggleVal] = useState(false);
@@ -39,25 +39,6 @@ function CreatedChecklists() {
     });
   }
 
-  function getChecklists() {
-    fetch(config.apiUrl + "checklist/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((actualData) => {
-        setChecklists(actualData);
-      });
-  }
   return (
     <div className="created-checklists">
       <div className="page-header">
@@ -84,7 +65,7 @@ function CreatedChecklists() {
         }
       >
         <div className="checklist-card-container">
-          {checklists
+          {clCtx.checklists
             .filter((val) => val.state === "Published")
             .map((val, idx) => {
               return <ChecklistCard checklist={val} key={idx}></ChecklistCard>;
@@ -110,7 +91,7 @@ function CreatedChecklists() {
         }
       >
         <div className="checklist-card-container">
-          {checklists
+          {clCtx.checklists
             .filter((val) => val.state === "In Review")
             .map((val, idx) => {
               return <ChecklistCard checklist={val} key={idx}></ChecklistCard>;
@@ -136,7 +117,7 @@ function CreatedChecklists() {
         }
       >
         <div className="checklist-card-container">
-          {checklists
+          {clCtx.checklists
             .filter((val) => val.state === "Draft")
             .map((val, idx) => {
               return <ChecklistCard checklist={val} key={idx}></ChecklistCard>;
@@ -162,7 +143,7 @@ function CreatedChecklists() {
         }
       >
         <div className="checklist-card-container">
-          {checklists
+          {clCtx.checklists
             .filter((val) => val.state === "Archive")
             .map((val, idx) => {
               return <ChecklistCard checklist={val} key={idx}></ChecklistCard>;

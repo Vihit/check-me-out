@@ -122,13 +122,13 @@ function Task(props) {
           ></i>
           {!locked && (
             <i
-              class="fa-solid fa-unlock lock-task"
+              className="fa-solid fa-unlock lock-task"
               onClick={() => updateTaskJson()}
             ></i>
           )}
           {locked && (
             <i
-              class="fa-solid fa-lock unlock-task"
+              className="fa-solid fa-lock unlock-task"
               onClick={() => setLocked(false)}
             ></i>
           )}
@@ -145,7 +145,7 @@ function Task(props) {
       <div className="task-type-toolbar margin-btm">
         <div className={"task-type " + (tt ? "" : "hidden-t")}>
           <i
-            class="fa-solid fa-hourglass-start hg"
+            className="fa-solid fa-hourglass-start hg"
             onClick={() => setTT(!tt)}
           ></i>{" "}
           <span className="tt-name" onClick={() => setTT(!tt)}>
@@ -181,7 +181,7 @@ function Task(props) {
           className={"task-type-1 " + (ct ? "" : "hidden-t")}
           onClick={() => setCT(!ct)}
         >
-          <i class="fa-sharp fa-solid fa-check-double cp"></i>{" "}
+          <i className="fa-sharp fa-solid fa-check-double cp"></i>{" "}
           <span className="tt-name">Checkpoint Task</span>
         </div>
       </div>

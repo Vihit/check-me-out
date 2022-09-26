@@ -7,10 +7,27 @@ import Dashboard from "./components/Dashboard";
 import { Route, useHistory } from "react-router-dom";
 import CreatedChecklists from "./components/CreatedChecklists";
 import CreateChecklist from "./components/CreateChecklist";
+import ChecklistContext from "./context/ChecklistContext";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
+  const [cls, setCls] = useState([]);
+  function setContextChecklists(checklists) {
+    setCls((prev) => checklists);
+  }
+  function updateClAt(checklist) {
+    setCls((prev) => {
+      let idx = 0;
+      for (let i = 0; i < prev.length; i++) {
+        if (prev[i].id === checklist.id) idx = i;
+      }
+      console.log("Idx is " + idx);
+      const updated = [...prev];
+      updated.splice(idx, 1, checklist);
+      return updated;
+    });
+  }
 
   function loginHandler() {
     setLoggedIn(true);
@@ -23,22 +40,30 @@ function App() {
   }
 
   return (
-    <div>
-      <Navbar isLoggedIn={loggedIn} onLogout={logoutHandler}></Navbar>
-      {!loggedIn ? <Login onLogin={loginHandler}></Login> : null}
-      {loggedIn && (
-        <div>
-          <Route exact path="/" component={Dashboard}></Route>
-          <Route exact path="/jobs" component={Dashboard}></Route>
-          <Route exact path="/checklist" component={CreateChecklist}></Route>
-          <Route
-            exact
-            path="/created-checklists"
-            component={CreatedChecklists}
-          ></Route>
-        </div>
-      )}
-    </div>
+    <ChecklistContext.Provider
+      value={{
+        checklists: cls,
+        setContextChecklists: setContextChecklists,
+        updateClAt: updateClAt,
+      }}
+    >
+      <div>
+        <Navbar isLoggedIn={loggedIn} onLogout={logoutHandler}></Navbar>
+        {!loggedIn ? <Login onLogin={loginHandler}></Login> : null}
+        {loggedIn && (
+          <div>
+            <Route exact path="/" component={Dashboard}></Route>
+            <Route exact path="/jobs" component={Dashboard}></Route>
+            <Route exact path="/checklist" component={CreateChecklist}></Route>
+            <Route
+              exact
+              path="/created-checklists"
+              component={CreatedChecklists}
+            ></Route>
+          </div>
+        )}
+      </div>
+    </ChecklistContext.Provider>
   );
 }
 

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
+import ChecklistContext from "../context/ChecklistContext";
 import "./ChecklistCard.css";
 import { config } from "./config";
 
 function ChecklistCard(props) {
   let history = useHistory();
+  const clCtx = useContext(ChecklistContext);
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [jobCLId, setJobCLId] = useState(0);
   const [equipment, setEquipment] = useState("");
@@ -56,7 +58,9 @@ function ChecklistCard(props) {
         }
         throw new Error("Some error occurred!");
       })
-      .then((actualData) => {})
+      .then((actualData) => {
+        clCtx.updateClAt(props.checklist);
+      })
       .catch(function (error) {
         console.log("Some error occurred!", error);
       });
@@ -92,7 +96,7 @@ function ChecklistCard(props) {
         {props.checklist.state === "Published" ? (
           <div onClick={() => setShowCreateJob(true)}>
             <span data-title="Create a Job">
-              <i class="fa-solid fa-square-plus edit-btn"></i>
+              <i className="fa-solid fa-square-plus edit-btn"></i>
             </span>
           </div>
         ) : null}
@@ -102,7 +106,7 @@ function ChecklistCard(props) {
               <i className="fa-solid fa-box-open archive-btn"></i>
             </span>
           ) : (
-            <span data-title="Archive" onClick={unarchive}>
+            <span data-title="Archive" onClick={archive}>
               <i className="fa-solid fa-box archive-btn"></i>
             </span>
           )}
