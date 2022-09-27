@@ -12,7 +12,9 @@ import { type } from "@testing-library/user-event/dist/type";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(
-    JSON.parse(localStorage.getItem("user"))["exp"] > Date.now() / 1000
+    JSON.parse(localStorage.getItem("user")) === null
+      ? false
+      : JSON.parse(localStorage.getItem("user"))["exp"] > Date.now() / 1000
       ? true
       : false
   );
