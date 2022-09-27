@@ -11,7 +11,11 @@ import ChecklistContext from "./context/ChecklistContext";
 import { type } from "@testing-library/user-event/dist/type";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(
+    JSON.parse(localStorage.getItem("user"))["exp"] > Date.now() / 1000
+      ? true
+      : false
+  );
   const history = useHistory();
   const [cls, setCls] = useState([]);
   const [types, setTypes] = useState([]);

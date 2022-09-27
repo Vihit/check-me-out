@@ -22,7 +22,7 @@ public class JobController {
     }
 
     @GetMapping("/assigned-to/{user}")
-    public ResponseEntity<?> getJobsAssignedTo(@PathVariable(name = "user") Integer user) {
+    public ResponseEntity<?> getJobsAssignedTo(@PathVariable(name = "user") String user) {
         Iterable<Job> jobs = jobService.getAllAssignedTo(user);
         return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
@@ -41,6 +41,7 @@ public class JobController {
 
     @PostMapping("/")
     public ResponseEntity<?> saveJob(@RequestBody Job job) {
+        job.getJobLogs().forEach(jobLog -> jobLog.setJob(job));
         Job savedJob = jobService.save(job);
         return new ResponseEntity<>(savedJob, HttpStatus.OK);
     }

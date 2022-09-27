@@ -3,33 +3,22 @@ import { useHistory } from "react-router-dom";
 import ChecklistContext from "../context/ChecklistContext";
 import "./ChecklistCard.css";
 import { config } from "./config";
+import CreateJobForm from "./CreateJobForm";
 
 function ChecklistCard(props) {
   let history = useHistory();
   const clCtx = useContext(ChecklistContext);
   const [showCreateJob, setShowCreateJob] = useState(false);
-  const [jobCLId, setJobCLId] = useState(0);
-  const [equipment, setEquipment] = useState("");
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
-  const [names, setNames] = useState([]);
 
   function openChecklist(checkList) {
     history.push("checklist", checkList);
   }
 
   function createJobBtn() {
-    getEquipmentNamesFor(props.checklist.equipmentType);
     setShowCreateJob(true);
   }
-
-  function cancelJobCreation() {
-    setJobCLId(0);
-    setEquipment("");
-    setShowCreateJob(false);
-  }
-
-  function createJob() {}
 
   function archive() {
     updateChecklist("Archive");
@@ -69,26 +58,6 @@ function ChecklistCard(props) {
       })
       .catch(function (error) {
         console.log("Some error occurred!", error);
-      });
-  }
-
-  function getEquipmentNamesFor(type) {
-    fetch(config.apiUrl + "master/equipment/names/" + type, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((actualData) => {
-        setNames(actualData);
       });
   }
 
@@ -138,41 +107,12 @@ function ChecklistCard(props) {
           )}
         </div>
       </div>
-      <div className={"create-job " + (showCreateJob ? "" : "close-flex ")}>
-        <div className="create-job-header">
-          <div className="flex-row-title">
-            <i className="fa-solid fa-table-list new-job-icon"></i>
-            <div className="new-job-head">Job For : {props.checklist.name}</div>
-          </div>
-          <div className="new-job-input">
-            <div className="new-job-label">Equipment</div>
-            <div className="new-job-ta">
-              <select
-                value={equipment}
-                onChange={(e) => setEquipment(e.target.value)}
-                rows="1"
-              >
-                <option>Equipment Name</option>
-                {names.map((val, idx) => {
-                  return (
-                    <option key={idx} value={val.data.equipment_name}>
-                      {val.data.equipment_name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
-          <div className="flex-row-title">
-            <div className="btn-save" onClick={createJob}>
-              Initiate Job
-            </div>
-            <div className="btn-cancel" onClick={cancelJobCreation}>
-              Cancel
-            </div>
-          </div>
-        </div>
-      </div>
+      {showCreateJob && (
+        <CreateJobForm
+          clId={props.checklist.id}
+          setShowCreateJob={setShowCreateJob}
+        ></CreateJobForm>
+      )}
       <div className={"notification" + (alert ? "" : " notification-hidden")}>
         <div>{alertContent}</div>
       </div>

@@ -14,6 +14,12 @@ function CreatedChecklists() {
   const [draftToggleVal, setDraftToggleVal] = useState(false);
   const [archiveToggleVal, setArchiveToggleVal] = useState(false);
 
+  useEffect(() => {
+    if (clCtx.checklists.length === 0) {
+      history.push("/");
+    }
+  }, []);
+
   function toggle(what) {
     if (what === "Pub") {
       setPubToggleVal(!pubToggleVal);

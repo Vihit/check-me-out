@@ -1,5 +1,6 @@
 package com.digitedgy.checkmeout.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -8,29 +9,24 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Job {
+public class JobLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne
-    @JoinColumn(name = "checklist_id")
-    private Checklist checklist;
-    private String equipmentName;
-    @OneToMany(mappedBy = "job",cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<JobLog> jobLogs;
+    private Integer stageId;
+    private Integer taskId;
     private Timestamp startedOn;
     private Timestamp completedOn;
-
-    @CreatedBy
-    @Column(name = "created_by")
-    private String createdBy;
-    @Column(name="create_dt")
-    @CreationTimestamp
-    private Timestamp createDt;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "job_id")
+    private Job job;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     @Column(name = "updated_by")
     @LastModifiedBy
     private String updatedBy;
@@ -46,12 +42,20 @@ public class Job {
         this.id = id;
     }
 
-    public Checklist getChecklist() {
-        return checklist;
+    public Integer getStageId() {
+        return stageId;
     }
 
-    public void setChecklist(Checklist checklist) {
-        this.checklist = checklist;
+    public void setStageId(Integer stageId) {
+        this.stageId = stageId;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public Timestamp getStartedOn() {
@@ -70,20 +74,12 @@ public class Job {
         this.completedOn = completedOn;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public Job getJob() {
+        return job;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getCreateDt() {
-        return createDt;
-    }
-
-    public void setCreateDt(Timestamp createDt) {
-        this.createDt = createDt;
+    public void setJob(Job job) {
+        this.job = job;
     }
 
     public String getUpdatedBy() {
@@ -102,19 +98,11 @@ public class Job {
         this.updateDt = updateDt;
     }
 
-    public Set<JobLog> getJobLogs() {
-        return jobLogs;
+    public User getUser() {
+        return user;
     }
 
-    public void setJobLogs(Set<JobLog> jobLogs) {
-        this.jobLogs = jobLogs;
-    }
-
-    public String getEquipmentName() {
-        return equipmentName;
-    }
-
-    public void setEquipmentName(String equipmentName) {
-        this.equipmentName = equipmentName;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -23,8 +23,8 @@ public class JobService {
         return jobRepository.findByCreatedBy(username);
     }
 
-    public Iterable<Job> getAllAssignedTo(Integer userId) {
-        return jobRepository.findByUserId(userId);
+    public Iterable<Job> getAllAssignedTo(String user) {
+        return jobRepository.findByCreatedBy(user);
     }
 
     public Iterable<Job> getAll() {
@@ -32,10 +32,10 @@ public class JobService {
     }
 
     public Iterable<Job> getAllIncompleteJobs() {
-        return jobRepository.findByJobStatus("Incomplete");
+        return jobRepository.findByCompletedOnIsNull();
     }
 
     public Iterable<Job> getAllCompleteJobs() {
-        return jobRepository.findByJobStatus("Complete");
+        return jobRepository.findByCompletedOnIsNotNull();
     }
 }
