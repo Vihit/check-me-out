@@ -9,6 +9,7 @@ import CreatedChecklists from "./components/CreatedChecklists";
 import CreateChecklist from "./components/CreateChecklist";
 import ChecklistContext from "./context/ChecklistContext";
 import { type } from "@testing-library/user-event/dist/type";
+import InitiatedJobs from "./components/InitiatedJobs";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(
@@ -70,7 +71,7 @@ function App() {
         {loggedIn && (
           <div>
             <Route exact path="/" component={Dashboard}></Route>
-            <Route exact path="/jobs" component={Dashboard}></Route>
+            <Route exact path="/jobs" component={InitiatedJobs}></Route>
             <Route exact path="/checklist" component={CreateChecklist}></Route>
             <Route
               exact
