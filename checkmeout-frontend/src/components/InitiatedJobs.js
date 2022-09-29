@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import JobContext from "../context/JobContext";
 import { config } from "./config";
 import "./InitiatedJobs.css";
 import JobCard from "./JobCard";
 
 function InitiatedJobs() {
+  let jobCtx = useContext(JobContext);
   const [pendingToggle, setPendingToggle] = useState(false);
   const [completedToggle, setCompletedToggle] = useState(false);
   const [jobs, setJobs] = useState([]);

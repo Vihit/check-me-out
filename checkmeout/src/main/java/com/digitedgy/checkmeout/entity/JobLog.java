@@ -27,6 +27,10 @@ public class JobLog {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Column(columnDefinition = "text")
+    private String taskActivity;
+    @Column(columnDefinition = "text")
+    private String comments;
     @Column(name = "updated_by")
     @LastModifiedBy
     private String updatedBy;
@@ -104,5 +108,21 @@ public class JobLog {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getTaskActivity() {
+        return taskActivity;
+    }
+
+    public void setTaskActivity(String taskActivity) {
+        this.taskActivity = taskActivity;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

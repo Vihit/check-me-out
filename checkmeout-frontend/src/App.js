@@ -10,8 +10,12 @@ import CreateChecklist from "./components/CreateChecklist";
 import ChecklistContext from "./context/ChecklistContext";
 import { type } from "@testing-library/user-event/dist/type";
 import InitiatedJobs from "./components/InitiatedJobs";
+import JobExecution from "./components/JobExecution";
+import JobContext from "./context/JobContext";
 
 function App() {
+  const [job, setJob] = useState({});
+  const [jobs, setJobs] = useState([]);
   const [loggedIn, setLoggedIn] = useState(
     JSON.parse(localStorage.getItem("user")) === null
       ? false
@@ -54,6 +58,15 @@ function App() {
     setLoggedIn(false);
   }
 
+  function replaceJob(newJob) {
+    setJob((prev) => newJob);
+  }
+
+  function replaceJobs(id, job) {
+    const updated = [...jobs];
+    updated.splice(id, 1, job);
+  }
+
   return (
     <ChecklistContext.Provider
       value={{
@@ -65,22 +78,40 @@ function App() {
         addCl: addCl,
       }}
     >
-      <div>
-        <Navbar isLoggedIn={loggedIn} onLogout={logoutHandler}></Navbar>
-        {!loggedIn ? <Login onLogin={loginHandler}></Login> : null}
-        {loggedIn && (
-          <div>
-            <Route exact path="/" component={Dashboard}></Route>
-            <Route exact path="/jobs" component={InitiatedJobs}></Route>
-            <Route exact path="/checklist" component={CreateChecklist}></Route>
-            <Route
-              exact
-              path="/created-checklists"
-              component={CreatedChecklists}
-            ></Route>
-          </div>
-        )}
-      </div>
+      <JobContext.Provider
+        value={{
+          job: job,
+          setJob: replaceJob,
+          jobs: jobs,
+          setJobs: replaceJobs,
+        }}
+      >
+        <div>
+          <Navbar isLoggedIn={loggedIn} onLogout={logoutHandler}></Navbar>
+          {!loggedIn ? <Login onLogin={loginHandler}></Login> : null}
+          {loggedIn && (
+            <div>
+              <Route exact path="/" component={Dashboard}></Route>
+              <Route exact path="/jobs" component={InitiatedJobs}></Route>
+              <Route
+                exact
+                path="/checklist"
+                component={CreateChecklist}
+              ></Route>
+              <Route
+                exact
+                path="/created-checklists"
+                component={CreatedChecklists}
+              ></Route>
+              <Route
+                exact
+                path="/job-execution"
+                component={JobExecution}
+              ></Route>
+            </div>
+          )}
+        </div>
+      </JobContext.Provider>
     </ChecklistContext.Provider>
   );
 }

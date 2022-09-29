@@ -68,6 +68,8 @@ function CreateJobForm(props) {
           user: {
             id: assignees[id][idx],
           },
+          comments: JSON.stringify([]),
+          taskActivity: JSON.stringify([]),
         };
       });
     });
@@ -168,7 +170,6 @@ function CreateJobForm(props) {
   }
 
   function setAssignee() {
-    console.log(chosenUser);
     cbs.forEach((element, id) => {
       element.forEach((cb, idx) => {
         if (cb) {

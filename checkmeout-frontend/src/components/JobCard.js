@@ -1,10 +1,11 @@
 import "./JobCard.css";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import JobContext from "../context/JobContext";
 
 function JobCard(props) {
-  useEffect(() => {
-    console.log();
-  }, []);
+  let jbCtx = useContext(JobContext);
+  let history = useHistory();
 
   function compareJobLogStageWise(a, b) {
     if (a.stageId < b.stageId) {
@@ -37,15 +38,20 @@ function JobCard(props) {
       (jl) => jl.completedOn !== null
     ).length;
     let total = props.job.jobLogs.length;
-    let finalGrad = "";
-    for (let i = 0; i < total; i++) {
-      if (i < completed) finalGrad = finalGrad + ",#00cfa0";
-      else finalGrad = finalGrad + ",#EFEFEF";
-    }
-    return finalGrad;
+    let pct = (completed / total) * 100;
+
+    return (
+      ",#00cfa0 0%, #00cfa0 " + pct + "%, #EFEFEF " + pct + "%, #EFEFEF 100%"
+    );
   }
+
+  function goToJobExecution() {
+    jbCtx.setJob(props.job);
+    history.push("/job-execution", props.job);
+  }
+
   return (
-    <div className="job-card">
+    <div className="job-card" onClick={goToJobExecution}>
       <div className="cl-details">
         <div className="cl-card-id">#{props.job.id}</div>
         <div className="job-card-name">
@@ -53,15 +59,22 @@ function JobCard(props) {
           {" For "} <i>{props.job.equipmentName}</i>
         </div>
         {/* <div className="job-card-name">{" For " + props.job.equipmentName}</div> */}
-        <div className="job-card-sub-detail margin-top">
-          Next pending task for
-          <b>
-            {" " +
-              props.job.jobLogs
-                .filter((jl) => jl.completedOn === null)
-                .sort(compareJobLogStageWise)[0].user.username}
-          </b>
-        </div>
+        {props.job.jobLogs.filter((jl) => jl.completedOn === null).length >
+          0 && (
+          <div className="job-card-sub-detail margin-top">
+            Next pending task for
+            <b>
+              {" " +
+                props.job.jobLogs
+                  .filter((jl) => jl.completedOn === null)
+                  .sort(compareJobLogStageWise)[0].user.username}
+            </b>
+          </div>
+        )}
+        {props.job.jobLogs.filter((jl) => jl.completedOn === null).length ===
+          0 && (
+          <div className="job-card-sub-detail margin-top">Job Completed</div>
+        )}
         <div className="job-card-sub-detail">
           Last updated by{" "}
           <b>
