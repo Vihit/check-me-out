@@ -119,6 +119,7 @@ function ExecutionTask(props) {
       })
       .then((actualData) => {
         jobCtx.setJob(actualData);
+        jobCtx.setJobs(jobCtx.job.id, actualData);
       })
       .catch(function (error) {
         console.log("Some error occurred!", error);
@@ -154,6 +155,7 @@ function ExecutionTask(props) {
       })
       .then((actualData) => {
         jobCtx.setJob(actualData);
+        jobCtx.setJobs(jobCtx.job.id, actualData);
       })
       .catch(function (error) {
         console.log("Some error occurred!", error);

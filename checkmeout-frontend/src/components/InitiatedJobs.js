@@ -8,35 +8,7 @@ function InitiatedJobs() {
   let jobCtx = useContext(JobContext);
   const [pendingToggle, setPendingToggle] = useState(false);
   const [completedToggle, setCompletedToggle] = useState(false);
-  const [jobs, setJobs] = useState([]);
-
-  useEffect(() => {
-    getJobs();
-  }, []);
-
-  function getJobs() {
-    fetch(config.apiUrl + "job/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Some error occurred!");
-      })
-      .then((actualData) => {
-        setJobs(actualData);
-      })
-      .catch(function (error) {
-        console.log("Some error occurred!", error);
-      });
-  }
+  let jobs = jobCtx.jobs;
 
   return (
     <div className="created-checklists">

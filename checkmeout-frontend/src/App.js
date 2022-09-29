@@ -63,8 +63,21 @@ function App() {
   }
 
   function replaceJobs(id, job) {
-    const updated = [...jobs];
-    updated.splice(id, 1, job);
+    console.log("updating job " + id + " with " + job);
+
+    setJobs((prev) => {
+      const updated = [...prev];
+      let idx = 0;
+      jobs.forEach((job, index) => {
+        if (job.id === id) idx = index;
+      });
+      updated.splice(idx, 1, job);
+      return updated;
+    });
+  }
+
+  function setAllJobs(jobs) {
+    setJobs((prev) => jobs);
   }
 
   return (
@@ -84,6 +97,7 @@ function App() {
           setJob: replaceJob,
           jobs: jobs,
           setJobs: replaceJobs,
+          setAllJobs: setAllJobs,
         }}
       >
         <div>
