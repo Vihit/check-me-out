@@ -8,6 +8,7 @@ import JobContext from "../context/JobContext";
 
 function ExecutionTask(props) {
   let jobCtx = useContext(JobContext);
+  let stagesJson = JSON.parse(jobCtx.job.checklist.template).stages;
   // let taskJson =
   //   jobCtx.job.job.stages[props.stageNumber].tasks[props.number - 1];
   let taskLog = jobCtx.job.jobLogs.filter(
@@ -33,6 +34,20 @@ function ExecutionTask(props) {
   );
   const [taskAssignee, setTaskAssignee] = useState(taskLog.user);
   let comments = JSON.parse(taskLog.comments);
+  let disabled =
+    (props.stageNo === 1 ||
+      jobCtx.job.jobLogs
+        .filter((jl) => jl.stageId === props.stageNo - 1)
+        .filter((sl) => sl.completedOn === null).length === 0) &&
+    jobCtx.job.jobLogs.filter(
+      (jl) =>
+        jl.stageId === props.stageNo &&
+        jl.taskId < props.number &&
+        jl.completedOn === null &&
+        stagesJson[props.stageNo - 1].tasks[jl.taskId - 1].checkpoint
+    ).length === 0
+      ? false
+      : true;
 
   function cancelESign() {
     setESignPwd("");
@@ -59,6 +74,7 @@ function ExecutionTask(props) {
       setESigned(false);
     }
   }
+
   function addComment() {
     const cmt = {
       user: JSON.parse(localStorage.getItem("user"))["sub"],
@@ -179,7 +195,7 @@ function ExecutionTask(props) {
     <div
       className={
         "exec-task-container " +
-        (taskLog.completedOn !== null ? "disabled-task" : "")
+        (taskLog.completedOn !== null || disabled ? "disabled-task" : "")
       }
     >
       <div className="execution-assignee-container">

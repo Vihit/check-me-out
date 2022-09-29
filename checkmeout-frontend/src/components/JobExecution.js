@@ -8,7 +8,6 @@ function JobExecution(props) {
   let jobCtx = useContext(JobContext);
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
-  const [jobLogs, setJobLogs] = useState(props.location.state.jobLogs);
   const [stages, setStages] = useState(
     JSON.parse(jobCtx.job.checklist.template)["stages"].map((val, idx) => {
       if (val !== null)
