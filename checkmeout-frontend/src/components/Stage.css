@@ -81,6 +81,11 @@
   justify-content: center;
 }
 
+.stage-nm > input {
+  color: #b0abf8;
+  outline-color: #b0abf8;
+}
+
 .stage-name-control {
   margin-top: 20px;
   width: 100%;

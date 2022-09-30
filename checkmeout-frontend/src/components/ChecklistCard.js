@@ -92,13 +92,13 @@ function ChecklistCard(props) {
         <div className="cl-actions">
           {props.checklist.state === "Published" &&
           userRole != "ROLE_OPERATOR" ? (
-            <div onClick={() => createJobBtn()}>
+            <div className="span-title-div" onClick={() => createJobBtn()}>
               <span data-title="Create a Job">
                 <i className="fa-solid fa-square-plus edit-btn"></i>
               </span>
             </div>
           ) : null}
-          <div>
+          <div className="span-title-div">
             {props.checklist.state === "Archive" ? (
               <span data-title="Unarchive" onClick={unarchive}>
                 <i className="fa-solid fa-box-open archive-btn"></i>

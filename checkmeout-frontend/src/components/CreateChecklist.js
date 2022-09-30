@@ -10,6 +10,7 @@ function CreateChecklist(props) {
   let location = useLocation();
   let history = useHistory();
   const clCtx = useContext(ChecklistContext);
+  const inReview = location.state.checklist.state === "In Review";
   const [stages, setStages] = useState(
     JSON.parse(location.state.checklist.template)["stages"].map((val, idx) => {
       if (val !== null)
@@ -20,6 +21,7 @@ function CreateChecklist(props) {
             removeStage={removeStage}
             updateStage={updateStage}
             stage={val}
+            inReview={inReview}
           ></Stage>
         );
     })
@@ -42,11 +44,13 @@ function CreateChecklist(props) {
   const [clReq, setclReq] = useState({});
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
+  const [alertType, setAlertType] = useState("green");
   const [reviewer, setReviewer] = useState("Cancel");
   const [reviewers, setReviewers] = useState([]);
   const [finalReview, setFinalReview] = useState(false);
   const [editable, setEditable] = useState(false);
   let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
+  let username = JSON.parse(localStorage.getItem("user"))["sub"];
 
   useEffect(() => {
     if (location.state.checklist.created_by === null) setEditable(true);
@@ -56,7 +60,6 @@ function CreateChecklist(props) {
     ) {
       setEditable(true);
     } else {
-      console.log("Editable is false");
     }
   }, []);
 
@@ -105,6 +108,7 @@ function CreateChecklist(props) {
           removeStage={removeStage}
           updateStage={updateStage}
           stage={{ name: "", tasks: [] }}
+          inReview={props.inReview}
         ></Stage>
       );
       return updated;
@@ -125,24 +129,33 @@ function CreateChecklist(props) {
   }
 
   function sendToDraft() {
-    const newClReq = updateChecklistJson("Draft");
-    postPutChecklist(newClReq);
+    if (verifyRequiredFields()) {
+      const newClReq = updateChecklistJson("Draft");
+      postPutChecklist(newClReq);
+    }
   }
 
   function sendToReview() {
-    if (!finalReview) {
-      getReviewers();
-      setReviewer("");
-      setFinalReview(true);
-    } else {
-      if (reviewer !== "" && reviewer !== "Cancel") {
-        const newClReq = updateChecklistJson("In Review");
-        newClReq["reviewBy"] = reviewer;
-        postPutChecklist(newClReq);
-        setFinalReview(false);
-        setReviewer("Cancel");
+    if (verifyRequiredFields()) {
+      if (!finalReview) {
+        getReviewers();
+        setReviewer("");
+        setFinalReview(true);
+      } else {
+        if (reviewer !== "" && reviewer !== "Cancel") {
+          const newClReq = updateChecklistJson("In Review");
+          newClReq["reviewBy"] = reviewer;
+          postPutChecklist(newClReq);
+          setFinalReview(false);
+          setReviewer("Cancel");
+        }
       }
     }
+  }
+
+  function sendToPublish() {
+    const newClReq = updateChecklistJson("Published");
+    postPutChecklist(newClReq);
   }
 
   function reviewerChanged(reviewer) {
@@ -210,15 +223,67 @@ function CreateChecklist(props) {
         throw new Error("Some error occurred!");
       })
       .then((actualData) => {
-        setReviewers(actualData);
+        setReviewers(
+          actualData.filter(
+            (usr) =>
+              usr.username !== JSON.parse(localStorage.getItem("user"))["sub"]
+          )
+        );
       })
       .catch(function (error) {
         console.log("Some error occurred!", error);
       });
   }
+
+  function verifyRequiredFields() {
+    let flag = false;
+    if (clName.replace(/ /g, "").length > 0) {
+      if (tOE.replace(/ /g, "").length > 0) {
+        console.log(tOE);
+        if (stageJson.length > 0) {
+          if (stageJson.filter((stg) => stg.tasks.length === 0).length === 0) {
+          } else {
+            setAlert(true);
+            setAlertContent("Please add tasks under all stages!");
+            flag = true;
+          }
+        } else {
+          setAlert(true);
+          setAlertContent("Please add a stage!");
+          flag = true;
+        }
+      } else {
+        setAlert(true);
+        setAlertContent("Equipment type cannot be empty!");
+        flag = true;
+      }
+    } else {
+      setAlert(true);
+      setAlertContent("Checklist name cannot be empty!");
+      flag = true;
+    }
+
+    const timeId = setTimeout(() => {
+      setAlert(false);
+      setAlertContent("");
+      setAlertType((prev) => "green");
+    }, 2000);
+    if (flag === true) {
+      setAlertType("red");
+      return false;
+    } else {
+      return true;
+    }
+  }
   return (
     <div className="checklist-detailed-container">
-      <div className={"notification" + (alert ? "" : " notification-hidden")}>
+      <div
+        className={
+          "notification" +
+          (alert ? "" : " notification-hidden") +
+          (alertType === "red" ? " red-alert" : "")
+        }
+      >
         <div>{alertContent}</div>
       </div>
       <div
@@ -246,7 +311,7 @@ function CreateChecklist(props) {
           value={tOE}
           onChange={(e) => setTOE(e.target.value)}
         >
-          <option>Equipment Type</option>
+          <option value="">Equipment Type</option>
           {clCtx.types.map((val, idx) => {
             return (
               <option key={idx} value={val.data.equipment_type}>
@@ -291,12 +356,12 @@ function CreateChecklist(props) {
           return val;
         })}{" "}
       </div>
-      {userRole !== "ROLE_OPERATOR" && (
+      {userRole !== "ROLE_OPERATOR" && !inReview && (
         <div className="add-a-stage" onClick={() => addStage()}>
           Add a Stage
         </div>
       )}
-      {userRole !== "ROLE_OPERATOR" && (
+      {userRole !== "ROLE_OPERATOR" && !inReview && (
         <div className="btns">
           <div className="draft-btn" onClick={sendToDraft}>
             Save to Draft
@@ -326,6 +391,13 @@ function CreateChecklist(props) {
 
           <div className="review-btn" onClick={sendToReview}>
             {finalReview ? "Submit" : "Send to Review"}
+          </div>
+        </div>
+      )}
+      {inReview && location.state.checklist.reviewBy === username && (
+        <div className="btns">
+          <div className="review-btn" onClick={sendToPublish}>
+            Publish
           </div>
         </div>
       )}

@@ -266,7 +266,13 @@ function ExecutionTask(props) {
       }
     >
       <div className="execution-assignee-container">
-        <div className="exec-assignee">
+        <div
+          className="exec-assignee"
+          style={{
+            backgroundColor: generateColor(taskAssignee.username),
+            color: "white",
+          }}
+        >
           {taskAssignee.first_name.charAt(0).toUpperCase() +
             taskAssignee.last_name.charAt(0).toUpperCase()}
         </div>

@@ -61,10 +61,11 @@
   background-color: #a7b9b53f;
 }
 
-span {
+.span-title-div > span {
   position: relative;
 }
-span:hover::after {
+
+.span-title-div > span:hover::after {
   content: attr(data-title);
   padding: 5px;
   border: 1px solid #000;

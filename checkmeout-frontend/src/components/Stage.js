@@ -20,6 +20,7 @@ function Stage(props) {
             removeTask={removeTask}
             updateTask={updateTask}
             task={val}
+            inReview={props.inReview}
           ></Task>
         );
     })
@@ -52,6 +53,7 @@ function Stage(props) {
           removeTask={removeTask}
           updateTask={updateTask}
           task={newTask}
+          inReview={props.inReview}
         ></Task>
       );
       return updated;
@@ -96,24 +98,26 @@ function Stage(props) {
   }
 
   return (
-    <div className="stage-container">
+    <div className={"stage-container"}>
       <div className="stage-header">
         <div>
           Stage - <span className="stage-heading">{name}</span>
         </div>
         {userRole !== "ROLE_OPERATOR" && (
           <div>
-            <i
-              className="fa-solid fa-trash-can trash"
-              onClick={() => props.removeStage(props.number)}
-            ></i>
-            {!locked && (
+            {!props.inReview && (
+              <i
+                className="fa-solid fa-trash-can trash"
+                onClick={() => props.removeStage(props.number)}
+              ></i>
+            )}
+            {!locked && !props.inReview && (
               <i
                 className="fa-solid fa-unlock lock-task"
                 onClick={() => updateStageJson()}
               ></i>
             )}
-            {locked && (
+            {locked && !props.inReview && (
               <i
                 className="fa-solid fa-lock unlock-task"
                 onClick={() => unlockAndOpen()}
@@ -144,11 +148,11 @@ function Stage(props) {
         className={
           "stage-task-container " +
           (toggleVal ? "closed" : "") +
-          (userRole === "ROLE_OPERATOR" ? " disabled-task-part" : "")
+          (userRole === "ROLE_OPERATOR" || locked ? " disabled-task-part" : "")
         }
       >
         <div className="stage-detail-container">
-          <div style={{ width: "90%" }}>
+          <div className="stage-nm" style={{ width: "90%" }}>
             <input
               className="stage-name-control"
               type="text"

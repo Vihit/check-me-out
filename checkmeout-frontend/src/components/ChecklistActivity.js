@@ -27,7 +27,7 @@ function ChecklistActivity(props) {
 
   return (
     <div className="checklist-act-container">
-      {userRole !== "ROLE_OPERATOR" && (
+      {userRole !== "ROLE_OPERATOR" && !props.inReview && (
         <div className="checklist-delete">
           <i
             className="fa-solid fa-trash-can trash-cl"

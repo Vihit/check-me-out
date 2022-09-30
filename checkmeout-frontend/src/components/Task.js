@@ -15,6 +15,7 @@ function Task(props) {
               removeCLActivity={removeCLActivity}
               updateCL={updateCL}
               checklist={val}
+              inReview={props.inReview}
             ></ChecklistActivity>
           );
         }
@@ -98,6 +99,7 @@ function Task(props) {
           removeCLActivity={removeCLActivity}
           updateCL={updateCL}
           checklist={newCLActivity}
+          inReview={props.inReview}
         ></ChecklistActivity>
       );
       setActivities((prev) => {
@@ -116,7 +118,7 @@ function Task(props) {
     <div className="task-container">
       <div className="task-id">
         <div></div>
-        {userRole !== "ROLE_OPERATOR" && (
+        {userRole !== "ROLE_OPERATOR" && !props.inReview && (
           <div>
             <i
               className="fa-solid fa-trash-can trash-task"
@@ -137,7 +139,11 @@ function Task(props) {
           </div>
         )}
       </div>
-      <div className="full-width">
+      <div
+        className={
+          "full-width task-nm " + (locked ? " disabled-task-part" : "")
+        }
+      >
         <input
           type="text"
           placeholder="Name of the task"
@@ -145,7 +151,12 @@ function Task(props) {
           onChange={(e) => setTaskName(e.target.value)}
         ></input>
       </div>
-      <div className="task-type-toolbar margin-btm">
+      <div
+        className={
+          "task-type-toolbar margin-btm " +
+          (locked ? " disabled-task-part" : "")
+        }
+      >
         <div className={"task-type " + (tt ? "" : "hidden-t")}>
           <i
             className="fa-solid fa-hourglass-start hg"
@@ -190,7 +201,11 @@ function Task(props) {
           <span className="tt-name">Checkpoint Task</span>
         </div>
       </div>
-      <div className="activity-container">
+      <div
+        className={
+          "activity-container " + (locked ? " disabled-task-part" : "")
+        }
+      >
         {activities.map((val, idx) => {
           return val;
         })}
