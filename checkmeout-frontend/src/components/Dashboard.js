@@ -31,6 +31,9 @@ function Dashboard() {
       .then((response) => {
         if (response.ok) {
           return response.json();
+        } else {
+          localStorage.clear();
+          history.push("/");
         }
       })
       .then((actualData) => {

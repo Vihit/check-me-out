@@ -25,12 +25,16 @@
 .create-checklist-btn {
   padding: 5px 10px 5px 10px;
   background-color: #216176;
+  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.2);
   color: white;
-  font-size: 20px;
-  border-radius: 20px;
+  font-size: 18px;
+  border-radius: 13px;
   text-align: center;
   cursor: pointer;
   font-weight: normal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header-bg {
@@ -43,18 +47,18 @@
 }
 
 .cont-bg {
-  background-color: #00bcb7;
+  background-color: #00bcb63d;
 }
 
 .cont-bg-review {
-  background-color: #008ec5;
+  background-color: #008dc53d;
 }
 
 .cont-bg-archive {
-  background-color: #4a5b9c;
+  background-color: #4a5a9c3a;
 }
 .cont-bg-draft {
-  background-color: #a7b9b5;
+  background-color: #a7b9b53f;
 }
 
 span {
@@ -73,4 +77,20 @@ span:hover::after {
   font-size: 12px;
   width: 75px;
   /* max-width: 100px; */
+}
+
+.stage-task-container-cl {
+  width: 98%;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  position: relative;
+  border-top: 0;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  padding-bottom: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 15px;
+  margin-top: -2px;
 }

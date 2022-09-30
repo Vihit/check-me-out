@@ -20,16 +20,35 @@ code {
 
 input {
   color: var(--black);
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
 }
 
 textarea {
   color: var(--black);
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
 }
 
 input:focus {
   outline-style: solid;
   outline-width: thin;
   outline-color: var(--main);
+}
+
+textarea {
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
+}
+
+select {
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
+  padding-left: 10px;
 }
 
 textarea:focus {

@@ -70,7 +70,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container cont-bg " + (pubToggleVal ? "closed" : "")
+          "stage-task-container-cl cont-bg " + (pubToggleVal ? "closed" : "")
         }
       >
         <div className="checklist-card-container">
@@ -95,7 +95,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container  cont-bg-review " +
+          "stage-task-container-cl  cont-bg-review " +
           (reviewToggleVal ? "closed" : "")
         }
       >
@@ -121,7 +121,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container  cont-bg-draft " +
+          "stage-task-container-cl  cont-bg-draft " +
           (draftToggleVal ? "closed" : "")
         }
       >
@@ -147,7 +147,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container cont-bg-archive margin-btm " +
+          "stage-task-container-cl cont-bg-archive margin-btm " +
           (archiveToggleVal ? "closed" : "")
         }
       >

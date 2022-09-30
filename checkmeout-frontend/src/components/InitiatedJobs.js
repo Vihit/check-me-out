@@ -29,7 +29,7 @@ function InitiatedJobs() {
       </div>
       <div
         className={
-          "stage-task-container cont-bg " + (pendingToggle ? "closed" : "")
+          "stage-task-container-cl cont-bg " + (pendingToggle ? "closed" : "")
         }
       >
         <div className="checklist-card-container">
@@ -54,7 +54,7 @@ function InitiatedJobs() {
       </div>
       <div
         className={
-          "stage-task-container  cont-bg-review " +
+          "stage-task-container-cl  cont-bg-review " +
           (completedToggle ? "closed" : "")
         }
       >
