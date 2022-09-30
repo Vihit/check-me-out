@@ -69,7 +69,7 @@ function CreateJobForm(props) {
             id: assignees[id][idx],
           },
           comments: JSON.stringify([]),
-          taskActivity: JSON.stringify([]),
+          taskActivity: JSON.stringify([[]]),
         };
       });
     });

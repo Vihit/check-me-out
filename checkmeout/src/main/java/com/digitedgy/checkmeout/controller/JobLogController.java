@@ -2,9 +2,7 @@ package com.digitedgy.checkmeout.controller;
 
 import com.digitedgy.checkmeout.entity.Job;
 import com.digitedgy.checkmeout.entity.JobLog;
-import com.digitedgy.checkmeout.model.Comment;
-import com.digitedgy.checkmeout.model.JobLogCommentRequest;
-import com.digitedgy.checkmeout.model.JobLogStartEndRequest;
+import com.digitedgy.checkmeout.model.*;
 import com.digitedgy.checkmeout.repository.JobLogRepository;
 import com.digitedgy.checkmeout.service.JobLogService;
 import com.digitedgy.checkmeout.service.JobService;
@@ -19,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RestController
@@ -35,6 +34,32 @@ public class JobLogController {
     public ResponseEntity<?> getJobLogsForJob(@PathVariable(name = "jobId") Integer jobId) {
         Iterable<JobLog> jobLogs = jobLogService.getAllByJobId(jobId);
         return new ResponseEntity<>(jobLogs, HttpStatus.OK);
+    }
+
+    @PutMapping("/task-activity/")
+    public ResponseEntity<?> updateJobLogTaskActivities(@RequestBody JobLogTaskActivityRequest jobLogTaskActivityRequest) throws Exception{
+        Optional<JobLog> existingJobLog = jobLogService.getJobLogById(jobLogTaskActivityRequest.getJobLogId());
+        if(existingJobLog.isPresent()) {
+            String taskActivities = existingJobLog.get().getTaskActivity();
+            ObjectMapper mapper = new ObjectMapper();
+            TaskActivity[][] tas = mapper.readValue(taskActivities, TaskActivity[][].class);
+            ArrayList<ArrayList<TaskActivity>> updatedActivities= new ArrayList<>();
+            ArrayList<TaskActivity> temp = new ArrayList<>();
+            for(TaskActivity[] actArr:tas) {
+                temp = new ArrayList<TaskActivity>();
+                for(TaskActivity act:actArr) {
+                    temp.add(act);
+                }
+                updatedActivities.add(temp);
+            }
+            updatedActivities.get(jobLogTaskActivityRequest.getTaskActivityId()).add(jobLogTaskActivityRequest.getTaskActivity());
+            String updatedTaskActivities = mapper.writeValueAsString(updatedActivities);
+            System.out.println(updatedTaskActivities);
+            existingJobLog.get().setTaskActivity(updatedTaskActivities);
+            JobLog savedJobLog = jobLogService.update(existingJobLog.get());
+            return new ResponseEntity<>(jobService.getJobById(jobLogTaskActivityRequest.getJobId()),HttpStatus.OK);
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Non-existing JobLog");
     }
 
     @PutMapping("/comments/")

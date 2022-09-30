@@ -178,6 +178,11 @@ li {
   opacity: 0.2;
 }
 
+.disabled-task-part {
+  pointer-events: none;
+  opacity: 1;
+}
+
 .comments-header {
   font-family: "Poppins";
   font-weight: bold;

@@ -7,3 +7,7 @@
   align-items: center;
   padding-bottom: 10px;
 }
+
+.checked-cl {
+  text-decoration: line-through;
+}

@@ -24,6 +24,8 @@ function ExecutionTask(props) {
         if (val.type === "checklist") {
           return (
             <ExecutionChecklistActivity
+              stageNo={props.stageNo}
+              taskNo={props.number}
               key={idx}
               id={idx}
               checklist={val}
@@ -269,7 +271,12 @@ function ExecutionTask(props) {
             taskAssignee.last_name.charAt(0).toUpperCase()}
         </div>
       </div>
-      <div className="exec-act-task-container">
+      <div
+        className={
+          "exec-act-task-container " +
+          (taskLog.startedOn === null ? "disabled-task-part" : "")
+        }
+      >
         <div className="exec-task-id">
           <div>Task {taskLog.stageId + "." + taskLog.taskId}</div>
           <div className="actions-exec">
