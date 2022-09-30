@@ -49,6 +49,40 @@ function ExecutionTask(props) {
       ? false
       : true;
 
+  const [hours, setHours] = useState("--");
+  const [mins, setMins] = useState("--");
+  const [secs, setSecs] = useState("--");
+  const [triggerColor, setTriggerColor] = useState(false);
+  const greenColor = props.task.timed.timeAct === "max" ? "#00CFA0" : "#e85151";
+  const redColor = props.task.timed.timeAct === "min" ? "#00CFA0" : "#e85151";
+  const [intervalFn, setIntervalFn] = useState();
+
+  useEffect(() => {
+    if (taskLog.startedOn !== null && taskLog.completedOn === null) {
+      triggerClock(taskLog.startedOn);
+    } else if (taskLog.startedOn !== null && taskLog.completedOn !== null) {
+      const dateNow = new Date(taskLog.completedOn).getTime();
+      const dateStarted = new Date(taskLog.startedOn).getTime();
+      let delta = Math.abs(dateNow - dateStarted) / 1000;
+      setHours(String(Math.floor(delta / 3600) % 24).padStart(2, "0"));
+      setMins(String(Math.floor(delta / 60) % 60).padStart(2, "0"));
+      setSecs(String(Math.floor(delta % 60)).padStart(2, "0"));
+      if (props.task.timed.isTimed) {
+        if (props.task.timed.timeUnit === "secs")
+          setTriggerColor(
+            Math.floor(delta % 60) - props.task.timed.timeVal >= 0
+          );
+        else if (props.task.timed.timeUnit === "mins")
+          setTriggerColor(
+            (Math.floor(delta / 60) % 60) - props.task.timed.timeVal >= 0
+          );
+        else
+          setTriggerColor(
+            (Math.floor(delta / 3600) % 24) - props.task.timed.timeVal >= 0
+          );
+      }
+    }
+  }, [taskLog.completedOn]);
   function cancelESign() {
     setESignPwd("");
     setShowESign(false);
@@ -72,6 +106,7 @@ function ExecutionTask(props) {
     else {
       beginEndTask("END");
       setESigned(false);
+      clearInterval(intervalFn);
     }
   }
 
@@ -143,15 +178,16 @@ function ExecutionTask(props) {
   }
 
   function beginEndTask(what) {
+    const dateVal = new Date();
     const req = {
       jobId: jobCtx.job.id,
       jobLogId: taskLog.id,
       startedOn:
         what === "BEGIN"
-          ? dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss")
+          ? dateFormat(dateVal, "yyyy-mm-dd HH:MM:ss")
           : taskLog.startedOn,
       completedOn:
-        what === "END" ? dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss") : null,
+        what === "END" ? dateFormat(dateVal, "yyyy-mm-dd HH:MM:ss") : null,
     };
     fetch(config.apiUrl + "joblog/start-stop/", {
       method: "PUT",
@@ -172,6 +208,10 @@ function ExecutionTask(props) {
       .then((actualData) => {
         jobCtx.setJob(actualData);
         jobCtx.setJobs(jobCtx.job.id, actualData);
+        if (what === "BEGIN")
+          if (props.task.timed.isTimed) {
+            triggerClock(dateVal);
+          }
       })
       .catch(function (error) {
         console.log("Some error occurred!", error);
@@ -191,6 +231,31 @@ function ExecutionTask(props) {
     return colour;
   }
 
+  function triggerClock(taskLogStartedOn) {
+    const interval = setInterval(() => {
+      const dateNow = new Date();
+      const dateStarted = new Date(taskLogStartedOn).getTime();
+      let delta = Math.abs(dateNow - dateStarted) / 1000;
+      setHours(String(Math.floor(delta / 3600) % 24).padStart(2, "0"));
+      setMins(String(Math.floor(delta / 60) % 60).padStart(2, "0"));
+      setSecs(String(Math.floor(delta % 60)).padStart(2, "0"));
+      if (props.task.timed.isTimed) {
+        if (props.task.timed.timeUnit === "secs")
+          setTriggerColor(
+            Math.floor(delta % 60) - props.task.timed.timeVal >= 0
+          );
+        else if (props.task.timed.timeUnit === "mins")
+          setTriggerColor(
+            (Math.floor(delta / 60) % 60) - props.task.timed.timeVal >= 0
+          );
+        else
+          setTriggerColor(
+            (Math.floor(delta / 3600) % 24) - props.task.timed.timeVal >= 0
+          );
+      }
+    }, 1000);
+    setIntervalFn(interval);
+  }
   return (
     <div
       className={
@@ -207,11 +272,75 @@ function ExecutionTask(props) {
       <div className="exec-act-task-container">
         <div className="exec-task-id">
           <div>Task {taskLog.stageId + "." + taskLog.taskId}</div>
-          {props.task.checkpoint && (
-            <div>
-              <i className="fa-sharp fa-solid fa-check-double cp-exec"></i>
+          <div className="actions-exec">
+            <div
+              className={
+                "clock " + (props.task.timed.isTimed ? "" : "close-flex")
+              }
+            >
+              <div className="clock-group">
+                <div
+                  className="clock-digit"
+                  style={{
+                    backgroundColor: triggerColor ? redColor : greenColor,
+                  }}
+                >
+                  {(hours + "").charAt(0)}
+                </div>
+                <div
+                  className="clock-digit"
+                  style={{
+                    backgroundColor: triggerColor ? redColor : greenColor,
+                  }}
+                >
+                  {(hours + "").charAt(1)}
+                </div>
+              </div>{" "}
+              :
+              <div className="clock-group">
+                <div
+                  className="clock-digit"
+                  style={{
+                    backgroundColor: triggerColor ? redColor : greenColor,
+                  }}
+                >
+                  {(mins + "").charAt(0)}
+                </div>
+                <div
+                  className="clock-digit"
+                  style={{
+                    backgroundColor: triggerColor ? redColor : greenColor,
+                  }}
+                >
+                  {(mins + "").charAt(1)}
+                </div>
+              </div>
+              :
+              <div className="clock-group">
+                <div
+                  className="clock-digit"
+                  style={{
+                    backgroundColor: triggerColor ? redColor : greenColor,
+                  }}
+                >
+                  {(secs + "").charAt(0)}
+                </div>
+                <div
+                  className="clock-digit"
+                  style={{
+                    backgroundColor: triggerColor ? redColor : greenColor,
+                  }}
+                >
+                  {(secs + "").charAt(1)}
+                </div>
+              </div>
             </div>
-          )}
+            {props.task.checkpoint && (
+              <div>
+                <i className="fa-sharp fa-solid fa-check-double cp-exec"></i>
+              </div>
+            )}
+          </div>
         </div>
         <div className="full-width">
           <input

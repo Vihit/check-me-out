@@ -164,6 +164,7 @@ function Task(props) {
             value={timeUnit}
             onChange={(e) => setTimeUnit(e.target.value)}
           >
+            <option value="---">---</option>
             <option value="seconds">Sec</option>
             <option value="mins">Min</option>
             <option value="hrs">Hr</option>
@@ -173,6 +174,7 @@ function Task(props) {
             value={timeAct}
             onChange={(e) => setTimeAct(e.target.value)}
           >
+            <option value="---">---</option>
             <option value="max">Max</option>
             <option value="min">Min</option>
           </select>

@@ -226,3 +226,45 @@ li {
   cursor: pointer;
   padding-top: 20px;
 }
+
+.clock {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: #a4a2a2;
+  padding: 3px;
+  align-items: center;
+  font-size: 23px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.clock-digit {
+  height: 32px;
+  width: 24px;
+  background-color: #a4a2a2;
+  margin-right: 1px;
+  margin-left: 1px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins";
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+}
+
+.clock-group {
+  display: flex;
+  flex-direction: row;
+}
+
+.actions-exec {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
