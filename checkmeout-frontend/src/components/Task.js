@@ -46,6 +46,7 @@ function Task(props) {
     checkpoint: ct,
     activities: activityJson,
   });
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
   function updateTaskJson() {
     const newTaskJson = {
@@ -115,24 +116,26 @@ function Task(props) {
     <div className="task-container">
       <div className="task-id">
         <div></div>
-        <div>
-          <i
-            className="fa-solid fa-trash-can trash-task"
-            onClick={() => props.removeTask(props.number)}
-          ></i>
-          {!locked && (
+        {userRole !== "ROLE_OPERATOR" && (
+          <div>
             <i
-              className="fa-solid fa-unlock lock-task"
-              onClick={() => updateTaskJson()}
+              className="fa-solid fa-trash-can trash-task"
+              onClick={() => props.removeTask(props.number)}
             ></i>
-          )}
-          {locked && (
-            <i
-              className="fa-solid fa-lock unlock-task"
-              onClick={() => setLocked(false)}
-            ></i>
-          )}
-        </div>
+            {!locked && (
+              <i
+                className="fa-solid fa-unlock lock-task"
+                onClick={() => updateTaskJson()}
+              ></i>
+            )}
+            {locked && (
+              <i
+                className="fa-solid fa-lock unlock-task"
+                onClick={() => setLocked(false)}
+              ></i>
+            )}
+          </div>
+        )}
       </div>
       <div className="full-width">
         <input

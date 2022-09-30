@@ -11,6 +11,7 @@ function ChecklistCard(props) {
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
   function openChecklist(checkList) {
     history.push("checklist", checkList);
@@ -88,7 +89,8 @@ function ChecklistCard(props) {
         </div>
       </div>
       <div className="cl-actions">
-        {props.checklist.state === "Published" ? (
+        {props.checklist.state === "Published" &&
+        userRole != "ROLE_OPERATOR" ? (
           <div onClick={() => createJobBtn()}>
             <span data-title="Create a Job">
               <i className="fa-solid fa-square-plus edit-btn"></i>

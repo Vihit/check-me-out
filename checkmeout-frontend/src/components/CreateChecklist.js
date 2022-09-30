@@ -46,6 +46,7 @@ function CreateChecklist(props) {
   const [reviewers, setReviewers] = useState([]);
   const [finalReview, setFinalReview] = useState(false);
   const [editable, setEditable] = useState(false);
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
   useEffect(() => {
     if (location.state.checklist.created_by === null) setEditable(true);
@@ -220,7 +221,12 @@ function CreateChecklist(props) {
       <div className={"notification" + (alert ? "" : " notification-hidden")}>
         <div>{alertContent}</div>
       </div>
-      <div className="cl-detail-section">
+      <div
+        className={
+          "cl-detail-section " +
+          (userRole === "ROLE_OPERATOR" ? "disabled-task-part" : "")
+        }
+      >
         <input
           className="full-width-control name-control"
           type="text"
@@ -229,7 +235,12 @@ function CreateChecklist(props) {
           onChange={(e) => setClName(e.target.value)}
         ></input>
       </div>
-      <div className="cl-detail-section">
+      <div
+        className={
+          "cl-detail-section " +
+          (userRole === "ROLE_OPERATOR" ? "disabled-task-part" : "")
+        }
+      >
         <select
           className="beside-control"
           value={tOE}
@@ -261,7 +272,12 @@ function CreateChecklist(props) {
           onChange={(e) => setCCR(e.target.value)}
         ></input>
       </div>
-      <div className="cl-detail-section">
+      <div
+        className={
+          "cl-detail-section " +
+          +(userRole === "ROLE_OPERATOR" ? "disabled-task-part" : "")
+        }
+      >
         <textarea
           rows="3"
           className="full-width-control name-control"
@@ -275,40 +291,44 @@ function CreateChecklist(props) {
           return val;
         })}{" "}
       </div>
-      <div className="add-a-stage" onClick={() => addStage()}>
-        Add a Stage
-      </div>
-      <div className="btns">
-        <div className="draft-btn" onClick={sendToDraft}>
-          Save to Draft
+      {userRole !== "ROLE_OPERATOR" && (
+        <div className="add-a-stage" onClick={() => addStage()}>
+          Add a Stage
         </div>
-        <div
-          className={"reviewers " + (reviewer !== "Cancel" ? " " : "hidden")}
-        >
-          <div>
-            <select
-              value={reviewer}
-              onChange={(e) => reviewerChanged(e.target.value)}
-              className={reviewer !== "Cancel" ? " " : "hidden"}
-              placeholder="Choose Reviewer"
-            >
-              <option value="">Choose Reviewer</option>
-              <option value="Cancel">Cancel</option>
-              {reviewers.map((val, idx) => {
-                return (
-                  <option value={val.username} key={idx}>
-                    {val.first_name + " " + val.last_name}
-                  </option>
-                );
-              })}
-            </select>
+      )}
+      {userRole !== "ROLE_OPERATOR" && (
+        <div className="btns">
+          <div className="draft-btn" onClick={sendToDraft}>
+            Save to Draft
+          </div>
+          <div
+            className={"reviewers " + (reviewer !== "Cancel" ? " " : "hidden")}
+          >
+            <div>
+              <select
+                value={reviewer}
+                onChange={(e) => reviewerChanged(e.target.value)}
+                className={reviewer !== "Cancel" ? " " : "hidden"}
+                placeholder="Choose Reviewer"
+              >
+                <option value="">Choose Reviewer</option>
+                <option value="Cancel">Cancel</option>
+                {reviewers.map((val, idx) => {
+                  return (
+                    <option value={val.username} key={idx}>
+                      {val.first_name + " " + val.last_name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+
+          <div className="review-btn" onClick={sendToReview}>
+            {finalReview ? "Submit" : "Send to Review"}
           </div>
         </div>
-
-        <div className="review-btn" onClick={sendToReview}>
-          {finalReview ? "Submit" : "Send to Review"}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

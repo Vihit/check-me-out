@@ -13,6 +13,7 @@ function CreatedChecklists() {
   const [reviewToggleVal, setReviewToggleVal] = useState(false);
   const [draftToggleVal, setDraftToggleVal] = useState(false);
   const [archiveToggleVal, setArchiveToggleVal] = useState(false);
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
   useEffect(() => {
     if (clCtx.checklists.length === 0) {
@@ -49,9 +50,11 @@ function CreatedChecklists() {
     <div className="created-checklists">
       <div className="page-header">
         <div>Checklists</div>
-        <div className="create-checklist-btn" onClick={() => createNew()}>
-          Create
-        </div>
+        {userRole !== "ROLE_OPERATOR" && (
+          <div className="create-checklist-btn" onClick={() => createNew()}>
+            Create
+          </div>
+        )}
       </div>
       <div className="stage-header header-bg margin-top">
         <div className="clr-white">Published</div>
