@@ -1,0 +1,13 @@
+.exec-checklist-act-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #efefef;
+  width: 100%;
+  padding-top: 10px;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.checked-cl {
+  text-decoration: line-through;
+}

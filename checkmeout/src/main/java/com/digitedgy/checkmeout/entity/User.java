@@ -56,7 +56,7 @@ public class User implements UserDetails {
     @UpdateTimestamp
     private Timestamp updateDt;
     @Column(name = "is_active",nullable = false,columnDefinition = "BOOLEAN")
-    private Boolean isActive;
+    private Boolean isActive = true;
     @Column(name = "last_login_dt")
     private Timestamp lastLoginDt;
 

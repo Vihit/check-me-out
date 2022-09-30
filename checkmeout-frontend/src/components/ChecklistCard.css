@@ -65,6 +65,7 @@
   margin-right: 15px;
   color: #216176;
   font-size: 20px;
+  z-index: 100;
 }
 
 .archive-btn {

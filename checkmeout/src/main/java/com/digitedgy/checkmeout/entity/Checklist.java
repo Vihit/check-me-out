@@ -27,8 +27,6 @@ public class Checklist {
     private String description;
     private String changeControlReference;
     private String state;
-
-
     @CreatedBy
     @Column(name = "created_by")
     private String createdBy;

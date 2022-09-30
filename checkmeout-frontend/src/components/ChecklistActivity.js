@@ -34,27 +34,27 @@ function ChecklistActivity(props) {
         ></i>
         {!locked && (
           <i
-            class="fa-solid fa-unlock lock-cl"
+            className="fa-solid fa-unlock lock-cl"
             onClick={() => setLocked(true)}
           ></i>
         )}
         {locked && (
           <i
-            class="fa-solid fa-lock unlock-cl"
+            className="fa-solid fa-lock unlock-cl"
             onClick={() => setLocked(false)}
           ></i>
         )}
       </div>
       {checklist.map((val, idx) => {
         return (
-          <div className="checklist-with-delete">
+          <div key={idx} className="checklist-with-delete">
             <div className="checklist">
               <input type="checkbox" disabled></input>
               {val}
             </div>
             {!locked && (
               <i
-                class="fa-sharp fa-solid fa-xmark cancel-cl"
+                className="fa-sharp fa-solid fa-xmark cancel-cl"
                 onClick={() => deleteCLItem(idx)}
               ></i>
             )}

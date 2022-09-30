@@ -107,13 +107,13 @@ function Stage(props) {
           ></i>
           {!locked && (
             <i
-              class="fa-solid fa-unlock lock-task"
+              className="fa-solid fa-unlock lock-task"
               onClick={() => updateStageJson()}
             ></i>
           )}
           {locked && (
             <i
-              class="fa-solid fa-lock unlock-task"
+              className="fa-solid fa-lock unlock-task"
               onClick={() => unlockAndOpen()}
             ></i>
           )}

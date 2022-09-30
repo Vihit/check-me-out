@@ -35,7 +35,7 @@ function Navbar(props) {
             <Link to="/">Dashboard</Link>
           </div>
           <div>
-            <Link to="/team">Jobs</Link>
+            <Link to="/jobs">Jobs</Link>
           </div>
         </div>
         <div className="account" onClick={handleAccountClick}>

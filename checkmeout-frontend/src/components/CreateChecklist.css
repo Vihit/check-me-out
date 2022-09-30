@@ -1,3 +1,9 @@
+.checklist-detailed-container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 40px;
+}
+
 .cl-detail-section {
   margin: 20px 30px 0px 30px;
 }
