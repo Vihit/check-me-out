@@ -1,6 +1,6 @@
 .create-job {
   position: fixed;
-  top: 20%;
+  top: 10%;
   left: 30%;
   width: 40%;
   /* height: 40%; */
@@ -123,6 +123,8 @@
   flex-direction: column;
   border-radius: 20px;
   background-color: var(--main);
+  overflow-y: auto;
+  height: 300px;
 }
 
 .table-row-head {
@@ -162,6 +164,7 @@
 
 .assignee {
   height: 60px;
+  width: 60px;
   background-color: var(--white);
   display: flex;
   align-items: center;
@@ -170,7 +173,7 @@
   font-family: "Poppins";
   color: var(--dark);
   font-size: 20px;
-  width: 10%;
+  /* width: 10%; */
 }
 
 .stg-name {
