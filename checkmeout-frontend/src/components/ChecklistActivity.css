@@ -22,7 +22,7 @@
   justify-content: flex-start;
   align-items: center;
   margin-left: 20px;
-  height: 20px;
+  /* height: 20px; */
 }
 
 input[type="checkbox"] {
