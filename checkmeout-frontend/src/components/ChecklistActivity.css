@@ -58,6 +58,13 @@ input[type="checkbox"] {
   outline-color: #cccccc;
 }
 
+.checklist > input {
+  margin-right: 20px;
+  font-size: 14px;
+  color: var(--black);
+  font-weight: normal;
+}
+
 .checklist-with-delete {
   display: flex;
   flex-direction: row;
