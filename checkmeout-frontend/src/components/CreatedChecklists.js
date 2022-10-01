@@ -13,12 +13,7 @@ function CreatedChecklists() {
   const [reviewToggleVal, setReviewToggleVal] = useState(false);
   const [draftToggleVal, setDraftToggleVal] = useState(false);
   const [archiveToggleVal, setArchiveToggleVal] = useState(false);
-
-  useEffect(() => {
-    if (clCtx.checklists.length === 0) {
-      history.push("/");
-    }
-  }, []);
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
   function toggle(what) {
     if (what === "Pub") {
@@ -49,9 +44,11 @@ function CreatedChecklists() {
     <div className="created-checklists">
       <div className="page-header">
         <div>Checklists</div>
-        <div className="create-checklist-btn" onClick={() => createNew()}>
-          Create
-        </div>
+        {userRole !== "ROLE_OPERATOR" && (
+          <div className="create-checklist-btn" onClick={() => createNew()}>
+            Create
+          </div>
+        )}
       </div>
       <div className="stage-header header-bg margin-top">
         <div className="clr-white">Published</div>
@@ -67,7 +64,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container cont-bg " + (pubToggleVal ? "closed" : "")
+          "stage-task-container-cl cont-bg " + (pubToggleVal ? "closed" : "")
         }
       >
         <div className="checklist-card-container">
@@ -92,7 +89,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container  cont-bg-review " +
+          "stage-task-container-cl  cont-bg-review " +
           (reviewToggleVal ? "closed" : "")
         }
       >
@@ -118,7 +115,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container  cont-bg-draft " +
+          "stage-task-container-cl  cont-bg-draft " +
           (draftToggleVal ? "closed" : "")
         }
       >
@@ -144,7 +141,7 @@ function CreatedChecklists() {
       </div>
       <div
         className={
-          "stage-task-container cont-bg-archive margin-btm " +
+          "stage-task-container-cl cont-bg-archive margin-btm " +
           (archiveToggleVal ? "closed" : "")
         }
       >

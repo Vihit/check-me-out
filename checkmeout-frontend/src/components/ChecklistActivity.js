@@ -5,7 +5,7 @@ function ChecklistActivity(props) {
   const [newCLItem, setNewCLItem] = useState("");
   const [checklist, setChecklist] = useState(props.checklist.checklistData);
   const [locked, setLocked] = useState(true);
-
+  let userRole = JSON.parse(localStorage.getItem("user")).role[0];
   function addToChecklist() {
     setChecklist((prev) => {
       const updated = [...prev];
@@ -27,24 +27,26 @@ function ChecklistActivity(props) {
 
   return (
     <div className="checklist-act-container">
-      <div className="checklist-delete">
-        <i
-          className="fa-solid fa-trash-can trash-cl"
-          onClick={() => props.removeCLActivity(props.id)}
-        ></i>
-        {!locked && (
+      {userRole !== "ROLE_OPERATOR" && !props.inReview && (
+        <div className="checklist-delete">
           <i
-            className="fa-solid fa-unlock lock-cl"
-            onClick={() => setLocked(true)}
+            className="fa-solid fa-trash-can trash-cl"
+            onClick={() => props.removeCLActivity(props.id)}
           ></i>
-        )}
-        {locked && (
-          <i
-            className="fa-solid fa-lock unlock-cl"
-            onClick={() => setLocked(false)}
-          ></i>
-        )}
-      </div>
+          {!locked && (
+            <i
+              className="fa-solid fa-unlock lock-cl"
+              onClick={() => setLocked(true)}
+            ></i>
+          )}
+          {locked && (
+            <i
+              className="fa-solid fa-lock unlock-cl"
+              onClick={() => setLocked(false)}
+            ></i>
+          )}
+        </div>
+      )}
       {checklist.map((val, idx) => {
         return (
           <div key={idx} className="checklist-with-delete">

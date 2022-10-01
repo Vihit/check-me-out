@@ -20,6 +20,7 @@ function Stage(props) {
             removeTask={removeTask}
             updateTask={updateTask}
             task={val}
+            inReview={props.inReview}
           ></Task>
         );
     })
@@ -28,6 +29,7 @@ function Stage(props) {
   const [stageJson, setStageJson] = useState(props.stage);
   const [taskJson, setTaskJson] = useState(props.stage.tasks);
   const [locked, setLocked] = useState(props.stage.name !== "");
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
   function updateStageJson() {
     const newStageJson = {
@@ -51,6 +53,7 @@ function Stage(props) {
           removeTask={removeTask}
           updateTask={updateTask}
           task={newTask}
+          inReview={props.inReview}
         ></Task>
       );
       return updated;
@@ -95,40 +98,61 @@ function Stage(props) {
   }
 
   return (
-    <div className="stage-container">
+    <div className={"stage-container"}>
       <div className="stage-header">
         <div>
           Stage - <span className="stage-heading">{name}</span>
         </div>
-        <div>
-          <i
-            className="fa-solid fa-trash-can trash"
-            onClick={() => props.removeStage(props.number)}
-          ></i>
-          {!locked && (
+        {userRole !== "ROLE_OPERATOR" && (
+          <div>
+            {!props.inReview && (
+              <i
+                className="fa-solid fa-trash-can trash"
+                onClick={() => props.removeStage(props.number)}
+              ></i>
+            )}
+            {!locked && !props.inReview && (
+              <i
+                className="fa-solid fa-unlock lock-task"
+                onClick={() => updateStageJson()}
+              ></i>
+            )}
+            {locked && !props.inReview && (
+              <i
+                className="fa-solid fa-lock unlock-task"
+                onClick={() => unlockAndOpen()}
+              ></i>
+            )}
             <i
-              className="fa-solid fa-unlock lock-task"
-              onClick={() => updateStageJson()}
+              className={
+                "fa-solid fa-circle-chevron-down toggler " +
+                (toggleVal ? "animate-drawer" : "")
+              }
+              onClick={toggle}
             ></i>
-          )}
-          {locked && (
+          </div>
+        )}
+        {userRole === "ROLE_OPERATOR" && (
+          <div>
             <i
-              className="fa-solid fa-lock unlock-task"
-              onClick={() => unlockAndOpen()}
+              className={
+                "fa-solid fa-circle-chevron-down toggler " +
+                (toggleVal ? "animate-drawer" : "")
+              }
+              onClick={toggle}
             ></i>
-          )}
-          <i
-            className={
-              "fa-solid fa-circle-chevron-down toggler " +
-              (toggleVal ? "animate-drawer" : "")
-            }
-            onClick={toggle}
-          ></i>
-        </div>
+          </div>
+        )}
       </div>
-      <div className={"stage-task-container " + (toggleVal ? "closed" : "")}>
+      <div
+        className={
+          "stage-task-container " +
+          (toggleVal ? "closed" : "") +
+          (userRole === "ROLE_OPERATOR" || locked ? " disabled-task-part" : "")
+        }
+      >
         <div className="stage-detail-container">
-          <div style={{ width: "90%" }}>
+          <div className="stage-nm" style={{ width: "90%" }}>
             <input
               className="stage-name-control"
               type="text"

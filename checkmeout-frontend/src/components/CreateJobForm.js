@@ -184,6 +184,20 @@ function CreateJobForm(props) {
       });
     });
   }
+
+  function generateColor(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var colour = "#";
+    for (var i = 0; i < 3; i++) {
+      var value = (hash >> (i * 8)) & 0xff;
+      colour += ("00" + value.toString(16)).substr(-2);
+    }
+    return colour;
+  }
+
   return (
     <div className={"create-job "}>
       <div className="create-job-header">
@@ -257,19 +271,33 @@ function CreateJobForm(props) {
                       </div>
                       <div className="stg-name">{stg.name}</div>
                       <div className="tsk-name">{tsk.name}</div>
-                      <div className="assignee">
+                      <div className={"assignee "}>
                         {users.filter((usr) => usr.id == assignees[idx][id])
-                          .length > 0
-                          ? users
+                          .length > 0 ? (
+                          <span
+                            style={{
+                              color: generateColor(
+                                users.filter(
+                                  (usr) => usr.id == assignees[idx][id]
+                                )[0]["username"]
+                              ),
+                            }}
+                          >
+                            {users
                               .filter((usr) => usr.id == assignees[idx][id])[0]
                               ["first_name"].toUpperCase()
                               .charAt(0) +
-                            "" +
-                            users
-                              .filter((usr) => usr.id == assignees[idx][id])[0]
-                              ["last_name"].toUpperCase()
-                              .charAt(0)
-                          : "--"}
+                              "" +
+                              users
+                                .filter(
+                                  (usr) => usr.id == assignees[idx][id]
+                                )[0]
+                                ["last_name"].toUpperCase()
+                                .charAt(0)}
+                          </span>
+                        ) : (
+                          "--"
+                        )}
                       </div>
                     </div>
                   );

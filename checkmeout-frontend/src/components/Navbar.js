@@ -35,6 +35,9 @@ function Navbar(props) {
             <Link to="/">Dashboard</Link>
           </div>
           <div>
+            <Link to="/created-checklists">Checklists</Link>
+          </div>
+          <div>
             <Link to="/jobs">Jobs</Link>
           </div>
         </div>

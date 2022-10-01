@@ -11,6 +11,7 @@ function ChecklistCard(props) {
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
   function openChecklist(checkList) {
     history.push("checklist", checkList);
@@ -82,31 +83,38 @@ function ChecklistCard(props) {
         <div className="cl-card-sub-detail">
           {props.checklist.equipmentType}
         </div>
-        <div className="cl-card-sub-detail">{props.checklist.sopNumber}</div>
         <div className="cl-card-sub-detail">
-          {props.checklist.changeControlReference}
+          {props.checklist.sopNumber === "" ? "NA" : props.checklist.sopNumber}
+        </div>
+        <div className="cl-card-sub-detail">
+          {props.checklist.changeControlReference === null
+            ? "NA"
+            : props.checklist.changeControlReference}
         </div>
       </div>
-      <div className="cl-actions">
-        {props.checklist.state === "Published" ? (
-          <div onClick={() => createJobBtn()}>
-            <span data-title="Create a Job">
-              <i className="fa-solid fa-square-plus edit-btn"></i>
-            </span>
+      {userRole != "ROLE_OPERATOR" && (
+        <div className="cl-actions">
+          {props.checklist.state === "Published" &&
+          userRole != "ROLE_OPERATOR" ? (
+            <div className="span-title-div" onClick={() => createJobBtn()}>
+              <span data-title="Create a Job">
+                <i className="fa-solid fa-square-plus edit-btn"></i>
+              </span>
+            </div>
+          ) : null}
+          <div className="span-title-div">
+            {props.checklist.state === "Archive" ? (
+              <span data-title="Unarchive" onClick={unarchive}>
+                <i className="fa-solid fa-box-open archive-btn"></i>
+              </span>
+            ) : (
+              <span data-title="Archive" onClick={archive}>
+                <i className="fa-solid fa-box archive-btn"></i>
+              </span>
+            )}
           </div>
-        ) : null}
-        <div>
-          {props.checklist.state === "Archive" ? (
-            <span data-title="Unarchive" onClick={unarchive}>
-              <i className="fa-solid fa-box-open archive-btn"></i>
-            </span>
-          ) : (
-            <span data-title="Archive" onClick={archive}>
-              <i className="fa-solid fa-box archive-btn"></i>
-            </span>
-          )}
         </div>
-      </div>
+      )}
       {showCreateJob && (
         <CreateJobForm
           clId={props.checklist.id}

@@ -10,6 +10,34 @@ function InitiatedJobs() {
   const [completedToggle, setCompletedToggle] = useState(false);
   let jobs = jobCtx.jobs;
 
+  useEffect(() => {
+    getJobs();
+  }, []);
+
+  function getJobs() {
+    fetch(config.apiUrl + "job/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Some error occurred!");
+      })
+      .then((actualData) => {
+        jobCtx.setAllJobs(actualData);
+      })
+      .catch(function (error) {
+        console.log("Some error occurred!", error);
+      });
+  }
+
   return (
     <div className="created-checklists">
       <div className="page-header">
@@ -29,7 +57,7 @@ function InitiatedJobs() {
       </div>
       <div
         className={
-          "stage-task-container cont-bg " + (pendingToggle ? "closed" : "")
+          "stage-task-container-cl cont-bg " + (pendingToggle ? "closed" : "")
         }
       >
         <div className="checklist-card-container">
@@ -54,7 +82,7 @@ function InitiatedJobs() {
       </div>
       <div
         className={
-          "stage-task-container  cont-bg-review " +
+          "stage-task-container-cl  cont-bg-review " +
           (completedToggle ? "closed" : "")
         }
       >

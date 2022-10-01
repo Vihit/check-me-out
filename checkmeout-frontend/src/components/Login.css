@@ -94,7 +94,7 @@ select {
   border-style: hidden;
   font-weight: bolder;
   text-align: center;
-  color: #cccccc;
+  color: var(--dark);
 }
 
 textarea {

@@ -18,18 +18,32 @@ code {
   /* overflow: hidden; */
 }
 
-input {
-  color: var(--black);
-}
-
-textarea {
-  color: var(--black);
+input[type="text"] {
+  color: var(--dark);
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
 }
 
 input:focus {
   outline-style: solid;
   outline-width: thin;
   outline-color: var(--main);
+}
+
+textarea {
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
+  color: var(--dark);
+}
+
+select {
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
+  padding-left: 10px;
+  color: var(--dark);
 }
 
 textarea:focus {
@@ -41,4 +55,5 @@ textarea:focus {
 select:focus {
   outline-style: solid;
   outline-width: thin;
+  color: var(--dark);
 }

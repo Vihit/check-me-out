@@ -29,7 +29,14 @@
 
 .full-width > input {
   width: 100%;
-  outline-color: #ffc389;
+  outline-color: #f9af6b;
+  color: #f9af6b;
+}
+
+.task-nm > input {
+  width: 100%;
+  outline-color: #f9af6b;
+  color: #f9af6b;
 }
 
 .full-width > select {
