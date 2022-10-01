@@ -25,7 +25,20 @@ input[type="text"] {
   outline-color: var(--main);
 }
 
-input:focus {
+input[type="password"]:focus {
+  outline-style: solid;
+  outline-width: thin;
+  outline-color: var(--main);
+}
+
+input[type="password"] {
+  color: var(--dark);
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: var(--main);
+}
+
+input[type="text"]:focus {
   outline-style: solid;
   outline-width: thin;
   outline-color: var(--main);

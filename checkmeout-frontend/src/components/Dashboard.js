@@ -109,7 +109,7 @@ function Dashboard() {
       )}
       <RoundStat
         color="#4A5B9C"
-        label="Jobs assigned to you"
+        label="Tasks assigned to you"
         value={
           jobCtx.jobs
             .flatMap((job) => job.jobLogs.map((jl) => jl))
@@ -123,7 +123,7 @@ function Dashboard() {
       ></RoundStat>
       <RoundStat
         color="#2F4858"
-        label="Jobs completed by you"
+        label="Tasks completed by you"
         value={
           jobCtx.jobs
             .flatMap((job) => job.jobLogs.map((jl) => jl))

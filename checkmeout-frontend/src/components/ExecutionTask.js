@@ -467,12 +467,18 @@ function ExecutionTask(props) {
       </div>
       <div className={"esign-modal " + (showESign ? " " : " close-flex")}>
         <div className="create-job-header">
-          <div className="flex-row-title">
+          <div className="flex-row-title margin-btm">
             <i class="fa-solid fa-signature new-job-icon"></i>
             <div className="new-job-head">E-Sign</div>
           </div>
-          <div className="new-job-input">
-            <div className="new-job-label">Password</div>
+          <div className="new-esign-input">
+            <div className="new-esign-label">Username</div>
+            <div className="new-job-ta">
+              <input type="text" value={user} disabled></input>
+            </div>
+          </div>
+          <div className="new-esign-input">
+            <div className="new-esign-label">Password</div>
             <div className="new-job-ta">
               <input
                 type="password"
