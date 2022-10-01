@@ -58,6 +58,7 @@ function ExecutionTask(props) {
   const greenColor = props.task.timed.timeAct === "max" ? "#00CFA0" : "#e85151";
   const redColor = props.task.timed.timeAct === "min" ? "#00CFA0" : "#e85151";
   const [intervalFn, setIntervalFn] = useState();
+  let user = JSON.parse(localStorage.getItem("user"))["sub"];
 
   useEffect(() => {
     if (taskLog.startedOn !== null && taskLog.completedOn === null) {
@@ -85,6 +86,7 @@ function ExecutionTask(props) {
       }
     }
   }, [taskLog.completedOn]);
+
   function cancelESign() {
     setESignPwd("");
     setShowESign(false);
@@ -262,7 +264,11 @@ function ExecutionTask(props) {
     <div
       className={
         "exec-task-container " +
-        (taskLog.completedOn !== null || disabled ? "disabled-task" : "")
+        (taskLog.completedOn !== null ||
+        disabled ||
+        taskAssignee.username !== user
+          ? "disabled-task"
+          : "")
       }
     >
       <div className="execution-assignee-container">

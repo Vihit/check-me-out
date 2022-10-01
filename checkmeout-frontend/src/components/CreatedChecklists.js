@@ -15,12 +15,6 @@ function CreatedChecklists() {
   const [archiveToggleVal, setArchiveToggleVal] = useState(false);
   let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
-  useEffect(() => {
-    if (clCtx.checklists.length === 0) {
-      history.push("/");
-    }
-  }, []);
-
   function toggle(what) {
     if (what === "Pub") {
       setPubToggleVal(!pubToggleVal);

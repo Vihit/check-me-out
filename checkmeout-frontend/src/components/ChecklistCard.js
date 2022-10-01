@@ -83,9 +83,13 @@ function ChecklistCard(props) {
         <div className="cl-card-sub-detail">
           {props.checklist.equipmentType}
         </div>
-        <div className="cl-card-sub-detail">{props.checklist.sopNumber}</div>
         <div className="cl-card-sub-detail">
-          {props.checklist.changeControlReference}
+          {props.checklist.sopNumber === "" ? "NA" : props.checklist.sopNumber}
+        </div>
+        <div className="cl-card-sub-detail">
+          {props.checklist.changeControlReference === null
+            ? "NA"
+            : props.checklist.changeControlReference}
         </div>
       </div>
       {userRole != "ROLE_OPERATOR" && (

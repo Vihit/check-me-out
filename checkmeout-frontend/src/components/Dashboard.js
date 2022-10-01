@@ -10,13 +10,13 @@ function Dashboard() {
   const clCtx = useContext(ChecklistContext);
   // const [checklists, setChecklists] = useState([]);
   const jobCtx = useContext(JobContext);
-
+  let history = useHistory();
+  let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
   useEffect(() => {
     getChecklists();
     getEquipmentTypes();
     getJobs();
   }, []);
-  let history = useHistory();
 
   function getChecklists() {
     fetch(config.apiUrl + "checklist/", {
@@ -89,24 +89,27 @@ function Dashboard() {
     <div className="dashboard-container">
       <RoundStat
         color="#00BCB7"
-        label="Total Checklists"
+        label="Checklists"
         value={clCtx.checklists.length}
         link="/created-checklists"
       ></RoundStat>
-      <RoundStat
-        color="#008EC5"
-        label="Initiated by you"
-        value={
-          jobCtx.jobs.filter(
-            (job) =>
-              job.createdBy === JSON.parse(localStorage.getItem("user"))["sub"]
-          ).length
-        }
-        link="/jobs"
-      ></RoundStat>
+      {userRole !== "ROLE_OPERATOR" && (
+        <RoundStat
+          color="#008EC5"
+          label="Jobs initiated by you"
+          value={
+            jobCtx.jobs.filter(
+              (job) =>
+                job.createdBy ===
+                JSON.parse(localStorage.getItem("user"))["sub"]
+            ).length
+          }
+          link="/jobs"
+        ></RoundStat>
+      )}
       <RoundStat
         color="#4A5B9C"
-        label="Assigned to you"
+        label="Jobs assigned to you"
         value={
           jobCtx.jobs
             .flatMap((job) => job.jobLogs.map((jl) => jl))
@@ -120,7 +123,7 @@ function Dashboard() {
       ></RoundStat>
       <RoundStat
         color="#2F4858"
-        label="Completed by you"
+        label="Jobs completed by you"
         value={
           jobCtx.jobs
             .flatMap((job) => job.jobLogs.map((jl) => jl))
