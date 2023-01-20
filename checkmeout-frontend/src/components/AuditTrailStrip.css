@@ -1,0 +1,84 @@
+.audit-strip {
+  display: flex;
+  min-height: 60px;
+  width: 90%;
+  font-size: 12px;
+  /* margin: auto; */
+}
+
+.audit-time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  font-family: Poppins;
+  font-style: italic;
+  font-size: 11px;
+}
+
+.audit-lines {
+  display: flex;
+  flex-direction: column;
+  width: 10%;
+}
+
+.audit-line1 {
+  border-left-style: solid;
+  border-width: 2px;
+  height: 50%;
+}
+
+.audit-line2 {
+  border-top-style: solid;
+  border-left-style: solid;
+  border-width: 2px;
+  height: 50%;
+}
+
+.audit-graphic {
+  display: flex;
+  width: 90%;
+  height: 70%;
+  /* justify-content: center; */
+  margin: auto;
+  /* background-color: black; */
+  /* height: 100%; */
+  border-radius: 30px;
+  box-shadow: 0px 5px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+.audit-icon {
+  width: 15%;
+  background-color: var(--main);
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.at-icon > i {
+  font-size: 23px;
+  color: white;
+}
+
+.audit-log {
+  display: flex;
+  padding-left: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  width: 85%;
+  background-color: white;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  font-family: Poppins;
+  padding-right: 10px;
+}
+
+.audit-un {
+  font-weight: bold;
+  font-size: 12px;
+  font-style: italic;
+  color: blueviolet;
+  margin-right: 5px;
+}

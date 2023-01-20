@@ -42,7 +42,9 @@ function ExecutionStage(props) {
       <div className="stage-header">
         <div className="stg-name">
           Stage {props.number}{" "}
-          <span className="stage-heading">{props.stage.name}</span>
+          <span className="stage-heading">
+            {props.stage.name + " - " + props.stage.type}
+          </span>
         </div>
         <div className="etc-actions">
           <div className="stg-prog-bar-flex">

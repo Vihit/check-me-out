@@ -21,6 +21,7 @@ public class Checklist {
     private String name;
     private String equipmentType;
     private String sopNumber;
+    private String type;
     @Column(columnDefinition = "text")
     private String template;
     @Column(columnDefinition = "text")
@@ -133,5 +134,13 @@ public class Checklist {
 
     public void setReviewDt(Timestamp reviewDt) {
         this.reviewDt = reviewDt;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -61,6 +61,7 @@ function ExecutionTask(props) {
   let user = JSON.parse(localStorage.getItem("user"))["sub"];
 
   useEffect(() => {
+    console.log(props);
     if (taskLog.startedOn !== null && taskLog.completedOn === null) {
       triggerClock(taskLog.startedOn);
     } else if (taskLog.startedOn !== null && taskLog.completedOn !== null) {
@@ -262,6 +263,7 @@ function ExecutionTask(props) {
   }
   return (
     <div
+      id="print-task"
       className={
         "exec-task-container " +
         (taskLog.completedOn !== null ||

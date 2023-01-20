@@ -28,6 +28,7 @@ function CreateChecklist(props) {
   );
   const [clName, setClName] = useState(location.state.checklist.name);
   const [tOE, setTOE] = useState(location.state.checklist.equipmentType);
+  const [tOC, setTOC] = useState(location.state.checklist.type);
   const [sop, setSOP] = useState(location.state.checklist.sopNumber);
   const [ccr, setCCR] = useState(
     location.state.checklist.changeControlReference
@@ -51,8 +52,10 @@ function CreateChecklist(props) {
   const [editable, setEditable] = useState(false);
   let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
   let username = JSON.parse(localStorage.getItem("user"))["sub"];
+  const [eqTypes, setEqTypes] = useState([]);
 
   useEffect(() => {
+    getEquipmentTypes();
     if (location.state.checklist.created_by === null) setEditable(true);
     else if (
       JSON.parse(localStorage.getItem("user"))["sub"] ===
@@ -67,6 +70,7 @@ function CreateChecklist(props) {
     const newCLJson = {
       name: clName,
       typeOfEquipment: tOE,
+      type: tOC,
       sopNumber: sop,
       changeControlReference: ccr,
       description: description,
@@ -77,6 +81,7 @@ function CreateChecklist(props) {
     });
     const newCLReq = {
       name: newCLJson["name"],
+      type: newCLJson["type"],
       equipmentType: newCLJson["typeOfEquipment"],
       sopNumber: newCLJson["sopNumber"],
       changeControlReference: newCLJson["changeControlReference"],
@@ -90,7 +95,29 @@ function CreateChecklist(props) {
     return newCLReq;
   }
 
+  function getEquipmentTypes() {
+    fetch(config.apiUrl + "master/equipment/types/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((actualData) => {
+        clCtx.updateTypes(actualData);
+        setEqTypes(actualData);
+      });
+  }
+
   function updateStage(id, value) {
+    console.log(value);
     setStageJson((prev) => {
       const updated = [...prev];
       updated.splice(id - 1, 1, value);
@@ -107,7 +134,7 @@ function CreateChecklist(props) {
           number={updated.length + 1}
           removeStage={removeStage}
           updateStage={updateStage}
-          stage={{ name: "", tasks: [] }}
+          stage={{ name: "", type: "", tasks: [] }}
           inReview={props.inReview}
         ></Stage>
       );
@@ -308,11 +335,29 @@ function CreateChecklist(props) {
       >
         <select
           className="beside-control"
+          value={tOC}
+          onChange={(e) => setTOC(e.target.value)}
+        >
+          <option value="">Checklist Type</option>
+          <option value="Type A Cleaning">Type A Cleaning</option>
+          <option value="Type B Cleaning">Type B Cleaning</option>
+          <option value="Line Clearance">Line Clearance</option>
+          <option value="Packing Line Setup">Packing Line Setup</option>
+        </select>
+      </div>
+      <div
+        className={
+          "cl-detail-section " +
+          (userRole === "ROLE_OPERATOR" ? "disabled-task-part" : "")
+        }
+      >
+        <select
+          className="beside-control"
           value={tOE}
           onChange={(e) => setTOE(e.target.value)}
         >
           <option value="">Equipment Type</option>
-          {clCtx.types.map((val, idx) => {
+          {eqTypes.map((val, idx) => {
             return (
               <option key={idx} value={val.data.equipment_type}>
                 {val.data.equipment_type}
