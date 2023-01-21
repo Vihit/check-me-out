@@ -160,12 +160,12 @@ BEGIN
 	END IF;
 	IF coalesce(NEW.comments,'') <> coalesce(OLD.comments,'') THEN
 	SET V_CHECK = 1;
-	insert into checkmeout_audit_trail (type,pk_value,action,prev_state,new_state,username) values (V_TYPE, V_PK_VALUE,'COMMENTED',V_PREV_STATE, 'User added a comment!', V_USERNAME);
+	insert into checkmeout_audit_trail (type,pk_value,action,prev_state,new_state,username) values (V_TYPE, V_PK_VALUE,'COMMENTED',V_PREV_STATE, concat('on Job: ',NEW.job_id,' Task: ',NEW.task_id,''), V_USERNAME);
 	END IF;
 	IF coalesce(NEW.task_activity,'') <> coalesce(OLD.task_activity,'') THEN
 	SET V_CHECK = 1;
 	SET V_NEW_STATE = concat('Stage: ',NEW.stage_id,' Task: ',NEW.task_id,' | ',NEW.task_activity);
-	insert into checkmeout_audit_trail (type,pk_value,action,prev_state,new_state,username) values (V_TYPE, V_PK_VALUE,'ACTED',V_PREV_STATE, V_NEW_STATE, V_USERNAME);
+	insert into checkmeout_audit_trail (type,pk_value,action,prev_state,new_state,username) values (V_TYPE, V_PK_VALUE,'ACTED',OLD.task_activity, V_NEW_STATE, V_USERNAME);
 	END IF;
 	IF coalesce(NEW.completed_on,'') <> coalesce(OLD.completed_on,'') THEN
 	SET V_CHECK = 1;

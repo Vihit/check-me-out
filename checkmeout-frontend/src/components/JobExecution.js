@@ -18,7 +18,6 @@ function JobExecution(props) {
     JSON.parse(props.location.state.checklist.template)["stages"].map(
       (val, idx) => {
         if (val !== null) {
-          console.log(val);
           return (
             <ExecutionStage
               key={idx + 1}
@@ -55,21 +54,31 @@ function JobExecution(props) {
   function printDocument() {
     const input = document.getElementById("checklist-detailed-container");
     const tasks = document.getElementsByClassName("exec-task-container");
+    const downloads = document.getElementsByClassName("download-btn");
+    for (let download of downloads) {
+      download.classList.add("close-flex");
+    }
     for (let item of tasks) {
       item.classList.remove("disabled-task");
     }
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "pt",
-        format: [1086, 720],
-      });
-      var width = pdf.internal.pageSize.getWidth();
-      var height = pdf.internal.pageSize.getHeight();
-      console.log(width + " " + height);
-      pdf.addImage(imgData, "JPEG", 0, 0, width, height);
-      // pdf.output('dataurlnewwindow');
+      let pdf = null;
+      if (canvas.width > canvas.height) {
+        pdf = new jsPDF({
+          orientation: "landscape",
+          unit: "pt",
+          format: [canvas.width, canvas.height],
+        });
+      } else {
+        pdf = new jsPDF({
+          orientation: "potrait",
+          unit: "pt",
+          format: [canvas.width, canvas.height],
+        });
+      }
+      pdf.addImage(imgData, "JPEG", 0, 0, canvas.width, canvas.height);
+
       var file =
         (job.id + " " + job.checklist.name + " " + job.equipmentName)
           .replace(/\s+/g, "_")
@@ -78,6 +87,9 @@ function JobExecution(props) {
     });
     for (let item of tasks) {
       item.classList.add("disabled-task");
+    }
+    for (let download of downloads) {
+      download.classList.remove("close-flex");
     }
   }
 
@@ -111,9 +123,12 @@ function JobExecution(props) {
           id="checklist-detailed-container"
           className="checklist-detailed-container"
         >
-          <AuditTrailWindow
-            auditTrails={jobAT.concat(jobLogAT)}
-          ></AuditTrailWindow>
+          {jobAT.length > 0 && (
+            <AuditTrailWindow
+              auditTrails={jobAT.concat(jobLogAT)}
+              jobId={job.id}
+            ></AuditTrailWindow>
+          )}
           <div
             className={"notification" + (alert ? "" : " notification-hidden")}
           >

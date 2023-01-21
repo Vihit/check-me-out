@@ -14,4 +14,8 @@ public class AuditTrailService {
     public Iterable<AuditTrail> getAllForPkValueAndType(String type,String[] pkValue) {
         return auditTrailRepository.findAllByTypeAndPkValueIn(type,pkValue);
     }
+
+    public void save(AuditTrail auditTrail) {
+        auditTrailRepository.save(auditTrail);
+    }
 }

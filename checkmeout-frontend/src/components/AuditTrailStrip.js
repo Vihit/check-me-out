@@ -3,17 +3,17 @@ import "./AuditTrailStrip.css";
 import { useEffect, useState } from "react";
 
 function AuditTrailStrip(props) {
-  const [date, setDate] = useState(new Date());
-
-  useEffect(() => {
-    let date = new Date();
-    date.setTime(Date.parse(props.auditTrail.auditDt));
-    setDate(date);
-  });
-
   return (
-    <div className="audit-strip">
-      <div className="audit-time">{date.toLocaleString()}</div>
+    <div
+      className={
+        props.auditTrail.action === "ACTED_ON_TASK"
+          ? "audit-strip-act hidden-strip close-flex"
+          : "audit-strip"
+      }
+    >
+      <div className="audit-date">
+        {new Date(Date.parse(props.auditTrail.auditDt)).toLocaleDateString()}
+      </div>
       <div className="audit-lines">
         <div className="audit-line1"></div>
         <div className="audit-line2"></div>
@@ -40,6 +40,7 @@ function AuditTrailStrip(props) {
             </div>
           </div>
         )}
+        {props.auditTrail.action === "ACTED_ON_TASK" && <div></div>}
         {props.auditTrail.action === "COMMENTED" && (
           <div className="audit-icon" style={{ backgroundColor: "#f69292" }}>
             <div className="at-icon">
@@ -62,12 +63,40 @@ function AuditTrailStrip(props) {
           </div>
         )}
 
-        <div className="audit-log">
-          <div className="audit-un">{props.auditTrail.userName}</div>
-          {props.auditTrail.action.toLowerCase() +
-            " " +
-            props.auditTrail.newState}
-        </div>
+        {props.auditTrail.action === "ACTED_ON_TASK" && (
+          <div className="audit-log-act">
+            <div className="audit-message">
+              <div className="audit-un">{props.auditTrail.userName}</div>
+
+              {props.auditTrail.newState.split("|")[0]}
+            </div>
+            <div className="audit-time">
+              <div>
+                {new Date(
+                  Date.parse(props.auditTrail.auditDt)
+                ).toLocaleTimeString()}
+              </div>
+            </div>
+          </div>
+        )}
+        {props.auditTrail.action !== "ACTED_ON_TASK" && (
+          <div className="audit-log">
+            <div className="audit-message">
+              <div className="audit-un">{props.auditTrail.userName}</div>
+
+              {props.auditTrail.action.toLowerCase() +
+                " " +
+                props.auditTrail.newState.split("|")[0]}
+            </div>
+            <div className="audit-time">
+              <div>
+                {new Date(
+                  Date.parse(props.auditTrail.auditDt)
+                ).toLocaleTimeString()}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
