@@ -75,6 +75,8 @@ function CreateChecklist(props) {
       changeControlReference: ccr,
       description: description,
       stages: stageJson,
+      originalId: location.state.checklist.originalId,
+      version: location.state.checklist.version,
     };
     setCLJson((prev) => {
       return newCLJson;
@@ -88,6 +90,8 @@ function CreateChecklist(props) {
       description: newCLJson["description"],
       state: state,
       template: JSON.stringify(newCLJson),
+      originalId: newCLJson["originalId"],
+      version: newCLJson["version"],
     };
     setclReq((prev) => {
       return newCLReq;

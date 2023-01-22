@@ -44,16 +44,36 @@ public class ChecklistController {
 
     @PostMapping("/")
     public ResponseEntity<?> saveChecklist(@RequestBody Checklist checklist) {
+        checklist.setVersion(1);
         Checklist savedChecklist = checklistService.save(checklist);
         return new ResponseEntity<>(savedChecklist, HttpStatus.OK);
     }
 
     @PutMapping("/")
     public ResponseEntity<?> updateChecklist(@RequestBody Checklist checklist) {
-        Optional<Checklist> existingChecklist = checklistService.getById(checklist.getId());
-        if(existingChecklist.isPresent()) {
-            checklist.setCreatedBy(existingChecklist.get().getCreatedBy());
-            checklist.setCreateDt(existingChecklist.get().getCreateDt());
+        Optional<Checklist> originalChecklist = null;
+        Optional<Checklist> previouslyUpdatedChecklist = null;
+        if(checklist.getOriginalId() != 0) {
+            originalChecklist = checklistService.getById(checklist.getOriginalId());
+            previouslyUpdatedChecklist = checklistService.getById(checklist.getId());
+        } else {
+            originalChecklist = checklistService.getById(checklist.getId());
+            checklist.setId(null);
+            checklist.setVersion(originalChecklist.get().getVersion()+1);
+            checklist.setOriginalId(originalChecklist.get().getId());
+        }
+        if(originalChecklist.isPresent()) {
+            if(previouslyUpdatedChecklist!=null && previouslyUpdatedChecklist.isPresent()) {
+                checklist.setCreatedBy(previouslyUpdatedChecklist.get().getCreatedBy());
+                checklist.setCreateDt(previouslyUpdatedChecklist.get().getCreateDt());
+                checklist.setReviewBy(previouslyUpdatedChecklist.get().getReviewBy());
+            }
+
+            if(checklist.getState().equalsIgnoreCase("published")) {
+                originalChecklist.get().setReasonForChange(checklist.getReasonForChange());
+                originalChecklist.get().setState("Overwritten");
+                Checklist updatedChecklist = checklistService.save(originalChecklist.get());
+            }
             Checklist savedChecklist = checklistService.save(checklist);
             return new ResponseEntity<>(savedChecklist, HttpStatus.OK);
         } else {

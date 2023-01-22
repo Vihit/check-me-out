@@ -17,7 +17,6 @@ public class Checklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
     private String name;
     private String equipmentType;
     private String sopNumber;
@@ -28,6 +27,11 @@ public class Checklist {
     private String description;
     private String changeControlReference;
     private String state;
+    @Column(nullable = true)
+    private String reasonForChange;
+    private int version;
+    @Column(nullable = true)
+    private int originalId;
     @CreatedBy
     @Column(name = "created_by")
     private String createdBy;
@@ -142,5 +146,29 @@ public class Checklist {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getReasonForChange() {
+        return reasonForChange;
+    }
+
+    public void setReasonForChange(String reasonForChange) {
+        this.reasonForChange = reasonForChange;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public int getOriginalId() {
+        return originalId;
+    }
+
+    public void setOriginalId(int originalId) {
+        this.originalId = originalId;
     }
 }
