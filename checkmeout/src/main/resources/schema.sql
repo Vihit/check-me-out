@@ -39,9 +39,12 @@ BEGIN
 	SET V_ACTION = 'UPDATED';
 	SET V_PK_VALUE = NEW.id;
 	SET V_TYPE = 'CHECKLIST';
-	SET V_USERNAME = NEW.review_by;
+    SET V_USERNAME = NEW.created_by;
 	SET V_PREV_STATE = '';
 	SET V_NEW_STATE = '';
+	IF NEW.state = 'Published' THEN
+	SET V_USERNAME = NEW.review_by;
+	END IF;
 	IF NEW.name <> OLD.name THEN
 	SET V_PREV_STATE = concat(V_PREV_STATE,'Name: ',OLD.name,' ');
 	SET V_NEW_STATE = concat(V_NEW_STATE,'Name: ',NEW.name,' ');

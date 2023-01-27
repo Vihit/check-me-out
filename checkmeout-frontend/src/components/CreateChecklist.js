@@ -30,6 +30,7 @@ function CreateChecklist(props) {
   const [tOE, setTOE] = useState(location.state.checklist.equipmentType);
   const [tOC, setTOC] = useState(location.state.checklist.type);
   const [sop, setSOP] = useState(location.state.checklist.sopNumber);
+  const [rfc, setRFC] = useState(location.state.checklist.reasonForChange);
   const [ccr, setCCR] = useState(
     location.state.checklist.changeControlReference
   );
@@ -77,6 +78,9 @@ function CreateChecklist(props) {
       stages: stageJson,
       originalId: location.state.checklist.originalId,
       version: location.state.checklist.version,
+      reasonForChange: location.state.checklist.reasonForChange,
+      createdBy: location.state.checklist.createdBy,
+      createDt: location.state.checklist.createDt,
     };
     setCLJson((prev) => {
       return newCLJson;
@@ -92,6 +96,9 @@ function CreateChecklist(props) {
       template: JSON.stringify(newCLJson),
       originalId: newCLJson["originalId"],
       version: newCLJson["version"],
+      reasonForChange: newCLJson["reasonForChange"],
+      createdBy: newCLJson["createdBy"],
+      createDt: newCLJson["createDt"],
     };
     setclReq((prev) => {
       return newCLReq;
@@ -160,32 +167,31 @@ function CreateChecklist(props) {
   }
 
   function sendToDraft() {
-    if (verifyRequiredFields()) {
-      const newClReq = updateChecklistJson("Draft");
-      postPutChecklist(newClReq);
-    }
+    const newClReq = updateChecklistJson("Draft");
+    postPutChecklist(newClReq);
   }
 
   function sendToReview() {
-    if (verifyRequiredFields()) {
-      if (!finalReview) {
-        getReviewers();
-        setReviewer("");
-        setFinalReview(true);
-      } else {
-        if (reviewer !== "" && reviewer !== "Cancel") {
-          const newClReq = updateChecklistJson("In Review");
-          newClReq["reviewBy"] = reviewer;
-          postPutChecklist(newClReq);
-          setFinalReview(false);
-          setReviewer("Cancel");
-        }
+    if (!finalReview) {
+      getReviewers();
+      setReviewer("");
+      setFinalReview(true);
+      setRFC("");
+    } else if (verifyRequiredFields()) {
+      if (reviewer !== "" && reviewer !== "Cancel") {
+        const newClReq = updateChecklistJson("In Review");
+        newClReq["reviewBy"] = reviewer;
+        newClReq["reasonForChange"] = rfc;
+        postPutChecklist(newClReq);
+        setFinalReview(false);
+        setReviewer("Cancel");
       }
     }
   }
 
   function sendToPublish() {
     const newClReq = updateChecklistJson("Published");
+    newClReq.reviewBy = username;
     postPutChecklist(newClReq);
   }
 
@@ -273,6 +279,19 @@ function CreateChecklist(props) {
         console.log(tOE);
         if (stageJson.length > 0) {
           if (stageJson.filter((stg) => stg.tasks.length === 0).length === 0) {
+            if (reviewer !== "" && reviewer !== "Cancel") {
+              if (rfc !== "" && rfc != null) {
+                console.log(rfc);
+              } else {
+                setAlert(true);
+                setAlertContent("Please add a reason for change!");
+                flag = true;
+              }
+            } else {
+              setAlert(true);
+              setAlertContent("Please add a reviewer!");
+              flag = true;
+            }
           } else {
             setAlert(true);
             setAlertContent("Please add tasks under all stages!");
@@ -443,10 +462,40 @@ function CreateChecklist(props) {
           </div>
         </div>
       )}
+      <div
+        className={
+          "reviewers cl-detail-section " +
+          (reviewer !== "Cancel" ? " " : "hidden")
+        }
+      >
+        <input
+          className="full-width-control name-control"
+          type="text"
+          placeholder="Reason For Change"
+          value={rfc}
+          onChange={(e) => setRFC(e.target.value)}
+        ></input>
+      </div>
       {inReview && location.state.checklist.reviewBy === username && (
-        <div className="btns">
-          <div className="review-btn" onClick={sendToPublish}>
-            Publish
+        <div>
+          <div className="btns">
+            <div className="review-btn" onClick={sendToPublish}>
+              Publish
+            </div>
+          </div>
+          <div className={"reviewers cl-detail-section"}>
+            <span
+              style={{ fontSize: "14px", color: "white", marginLeft: "10px" }}
+            >
+              Reason For Change
+            </span>
+            <input
+              className="full-width-control name-control"
+              type="text"
+              placeholder="Reason For Change"
+              value={rfc}
+              onChange={(e) => setRFC(e.target.value)}
+            ></input>
           </div>
         </div>
       )}

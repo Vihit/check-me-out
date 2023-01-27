@@ -39,6 +39,13 @@ function Login(props) {
       });
   }
 
+  function pressedKey(e) {
+    console.log("key down");
+    if (e.key === "Enter") {
+      loginHandler();
+    }
+  }
+
   return (
     <div className="login-flex-container">
       <div className="scrum-svg"></div>
@@ -56,12 +63,13 @@ function Login(props) {
             <input
               type="password"
               placeholder="password"
+              onKeyDown={(e) => pressedKey(e)}
               onChange={(e) => setPwd(e.target.value)}
             ></input>
           </div>
-          <div className="submit" onClick={loginHandler}>
+          <button className="submit" onClick={loginHandler}>
             Go
-          </div>
+          </button>
         </div>
       </div>
     </div>

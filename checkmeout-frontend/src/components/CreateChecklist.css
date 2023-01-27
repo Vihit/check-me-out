@@ -109,3 +109,22 @@
 .red-alert {
   background-color: #e85151;
 }
+
+.rfc-window {
+  position: fixed;
+  top: 40%;
+  left: 30%;
+  width: 40%;
+  /* height: 20%; */
+  background-color: var(--white);
+  border-style: solid;
+  border-color: var(--main);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 20px;
+  box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  padding-top: 20px;
+}
