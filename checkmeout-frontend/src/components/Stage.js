@@ -26,6 +26,7 @@ function Stage(props) {
     })
   );
   const [name, setName] = useState(props.stage.name);
+  const [type, setType] = useState(props.stage.type);
   const [stageJson, setStageJson] = useState(props.stage);
   const [taskJson, setTaskJson] = useState(props.stage.tasks);
   const [locked, setLocked] = useState(props.stage.name !== "");
@@ -34,6 +35,7 @@ function Stage(props) {
   function updateStageJson() {
     const newStageJson = {
       name: name,
+      type: type,
       tasks: taskJson,
     };
     setStageJson((prev) => {
@@ -103,6 +105,9 @@ function Stage(props) {
         <div>
           Stage - <span className="stage-heading">{name}</span>
         </div>
+        <div>
+          Type - <span className="stage-heading">{type}</span>
+        </div>
         {userRole !== "ROLE_OPERATOR" && (
           <div>
             {!props.inReview && (
@@ -160,6 +165,27 @@ function Stage(props) {
               value={name}
               onChange={(e) => setName(e.target.value)}
             ></input>
+          </div>{" "}
+          <div className="stage-nm" style={{ width: "90%" }}>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className={"stage-name-control"}
+            >
+              <option value="">Type</option>
+              <option value="Pre-requisite">Pre-requisite</option>
+              <option value="Cleaning Steps">Cleaning Steps</option>
+              <option value="Visual Inspection by Operator">
+                Visual Inspection by Operator
+              </option>
+              <option value="Visual Inspection by Supervisor">
+                Visual Inspection by Supervisor
+              </option>
+              <option value="Visual Inspection by QA">
+                Visual Inspection by QA
+              </option>
+              <option value="Assembling">Assembling</option>
+            </select>
           </div>
         </div>
         <div className="task-detail-container">

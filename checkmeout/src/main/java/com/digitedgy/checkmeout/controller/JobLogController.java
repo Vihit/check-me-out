@@ -1,15 +1,19 @@
 package com.digitedgy.checkmeout.controller;
 
+import com.digitedgy.checkmeout.entity.AuditTrail;
 import com.digitedgy.checkmeout.entity.Job;
 import com.digitedgy.checkmeout.entity.JobLog;
 import com.digitedgy.checkmeout.model.*;
 import com.digitedgy.checkmeout.repository.JobLogRepository;
+import com.digitedgy.checkmeout.service.AuditTrailService;
 import com.digitedgy.checkmeout.service.JobLogService;
 import com.digitedgy.checkmeout.service.JobService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,6 +33,9 @@ public class JobLogController {
 
     @Autowired
     JobService jobService;
+
+    @Autowired
+    AuditTrailService auditTrailService;
 
     @GetMapping("/all/{jobId}/")
     public ResponseEntity<?> getJobLogsForJob(@PathVariable(name = "jobId") Integer jobId) {
@@ -52,11 +59,19 @@ public class JobLogController {
                 }
                 updatedActivities.add(temp);
             }
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            AuditTrail auditTrail = new AuditTrail();
+            auditTrail.setAction("ACTED_ON_TASK");
+            auditTrail.setType("JOB_LOG");
+            auditTrail.setUserName(auth.getPrincipal().toString());
+            auditTrail.setPkValue(jobLogTaskActivityRequest.getJobLogId().toString());
+            auditTrail.setNewState(jobLogTaskActivityRequest.getTaskActivity().getAction()+" "+jobLogTaskActivityRequest.getTaskActivity().getActionOn());
             updatedActivities.get(jobLogTaskActivityRequest.getTaskActivityId()).add(jobLogTaskActivityRequest.getTaskActivity());
             String updatedTaskActivities = mapper.writeValueAsString(updatedActivities);
-            System.out.println(updatedTaskActivities);
             existingJobLog.get().setTaskActivity(updatedTaskActivities);
             JobLog savedJobLog = jobLogService.update(existingJobLog.get());
+
+            auditTrailService.save(auditTrail);
             return new ResponseEntity<>(jobService.getJobById(jobLogTaskActivityRequest.getJobId()),HttpStatus.OK);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Non-existing JobLog");

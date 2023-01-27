@@ -36,4 +36,8 @@ public class ChecklistService {
     public Iterable<Checklist> getAllReviewBy(String username) {
         return checklistRepository.findByReviewBy(username);
     }
+
+    public Optional<Checklist> getByOriginalId(int id) {
+        return checklistRepository.findByOriginalId(id);
+    }
 }

@@ -28,7 +28,9 @@ function CreateChecklist(props) {
   );
   const [clName, setClName] = useState(location.state.checklist.name);
   const [tOE, setTOE] = useState(location.state.checklist.equipmentType);
+  const [tOC, setTOC] = useState(location.state.checklist.type);
   const [sop, setSOP] = useState(location.state.checklist.sopNumber);
+  const [rfc, setRFC] = useState(location.state.checklist.reasonForChange);
   const [ccr, setCCR] = useState(
     location.state.checklist.changeControlReference
   );
@@ -51,8 +53,10 @@ function CreateChecklist(props) {
   const [editable, setEditable] = useState(false);
   let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
   let username = JSON.parse(localStorage.getItem("user"))["sub"];
+  const [eqTypes, setEqTypes] = useState([]);
 
   useEffect(() => {
+    getEquipmentTypes();
     if (location.state.checklist.created_by === null) setEditable(true);
     else if (
       JSON.parse(localStorage.getItem("user"))["sub"] ===
@@ -67,22 +71,34 @@ function CreateChecklist(props) {
     const newCLJson = {
       name: clName,
       typeOfEquipment: tOE,
+      type: tOC,
       sopNumber: sop,
       changeControlReference: ccr,
       description: description,
       stages: stageJson,
+      originalId: location.state.checklist.originalId,
+      version: location.state.checklist.version,
+      reasonForChange: location.state.checklist.reasonForChange,
+      createdBy: location.state.checklist.createdBy,
+      createDt: location.state.checklist.createDt,
     };
     setCLJson((prev) => {
       return newCLJson;
     });
     const newCLReq = {
       name: newCLJson["name"],
+      type: newCLJson["type"],
       equipmentType: newCLJson["typeOfEquipment"],
       sopNumber: newCLJson["sopNumber"],
       changeControlReference: newCLJson["changeControlReference"],
       description: newCLJson["description"],
       state: state,
       template: JSON.stringify(newCLJson),
+      originalId: newCLJson["originalId"],
+      version: newCLJson["version"],
+      reasonForChange: newCLJson["reasonForChange"],
+      createdBy: newCLJson["createdBy"],
+      createDt: newCLJson["createDt"],
     };
     setclReq((prev) => {
       return newCLReq;
@@ -90,7 +106,29 @@ function CreateChecklist(props) {
     return newCLReq;
   }
 
+  function getEquipmentTypes() {
+    fetch(config.apiUrl + "master/equipment/types/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((actualData) => {
+        clCtx.updateTypes(actualData);
+        setEqTypes(actualData);
+      });
+  }
+
   function updateStage(id, value) {
+    console.log(value);
     setStageJson((prev) => {
       const updated = [...prev];
       updated.splice(id - 1, 1, value);
@@ -107,7 +145,7 @@ function CreateChecklist(props) {
           number={updated.length + 1}
           removeStage={removeStage}
           updateStage={updateStage}
-          stage={{ name: "", tasks: [] }}
+          stage={{ name: "", type: "", tasks: [] }}
           inReview={props.inReview}
         ></Stage>
       );
@@ -129,32 +167,31 @@ function CreateChecklist(props) {
   }
 
   function sendToDraft() {
-    if (verifyRequiredFields()) {
-      const newClReq = updateChecklistJson("Draft");
-      postPutChecklist(newClReq);
-    }
+    const newClReq = updateChecklistJson("Draft");
+    postPutChecklist(newClReq);
   }
 
   function sendToReview() {
-    if (verifyRequiredFields()) {
-      if (!finalReview) {
-        getReviewers();
-        setReviewer("");
-        setFinalReview(true);
-      } else {
-        if (reviewer !== "" && reviewer !== "Cancel") {
-          const newClReq = updateChecklistJson("In Review");
-          newClReq["reviewBy"] = reviewer;
-          postPutChecklist(newClReq);
-          setFinalReview(false);
-          setReviewer("Cancel");
-        }
+    if (!finalReview) {
+      getReviewers();
+      setReviewer("");
+      setFinalReview(true);
+      setRFC("");
+    } else if (verifyRequiredFields()) {
+      if (reviewer !== "" && reviewer !== "Cancel") {
+        const newClReq = updateChecklistJson("In Review");
+        newClReq["reviewBy"] = reviewer;
+        newClReq["reasonForChange"] = rfc;
+        postPutChecklist(newClReq);
+        setFinalReview(false);
+        setReviewer("Cancel");
       }
     }
   }
 
   function sendToPublish() {
     const newClReq = updateChecklistJson("Published");
+    newClReq.reviewBy = username;
     postPutChecklist(newClReq);
   }
 
@@ -242,6 +279,19 @@ function CreateChecklist(props) {
         console.log(tOE);
         if (stageJson.length > 0) {
           if (stageJson.filter((stg) => stg.tasks.length === 0).length === 0) {
+            if (reviewer !== "" && reviewer !== "Cancel") {
+              if (rfc !== "" && rfc != null) {
+                console.log(rfc);
+              } else {
+                setAlert(true);
+                setAlertContent("Please add a reason for change!");
+                flag = true;
+              }
+            } else {
+              setAlert(true);
+              setAlertContent("Please add a reviewer!");
+              flag = true;
+            }
           } else {
             setAlert(true);
             setAlertContent("Please add tasks under all stages!");
@@ -308,11 +358,29 @@ function CreateChecklist(props) {
       >
         <select
           className="beside-control"
+          value={tOC}
+          onChange={(e) => setTOC(e.target.value)}
+        >
+          <option value="">Checklist Type</option>
+          <option value="Type A Cleaning">Type A Cleaning</option>
+          <option value="Type B Cleaning">Type B Cleaning</option>
+          <option value="Line Clearance">Line Clearance</option>
+          <option value="Packing Line Setup">Packing Line Setup</option>
+        </select>
+      </div>
+      <div
+        className={
+          "cl-detail-section " +
+          (userRole === "ROLE_OPERATOR" ? "disabled-task-part" : "")
+        }
+      >
+        <select
+          className="beside-control"
           value={tOE}
           onChange={(e) => setTOE(e.target.value)}
         >
           <option value="">Equipment Type</option>
-          {clCtx.types.map((val, idx) => {
+          {eqTypes.map((val, idx) => {
             return (
               <option key={idx} value={val.data.equipment_type}>
                 {val.data.equipment_type}
@@ -394,10 +462,40 @@ function CreateChecklist(props) {
           </div>
         </div>
       )}
+      <div
+        className={
+          "reviewers cl-detail-section " +
+          (reviewer !== "Cancel" ? " " : "hidden")
+        }
+      >
+        <input
+          className="full-width-control name-control"
+          type="text"
+          placeholder="Reason For Change"
+          value={rfc}
+          onChange={(e) => setRFC(e.target.value)}
+        ></input>
+      </div>
       {inReview && location.state.checklist.reviewBy === username && (
-        <div className="btns">
-          <div className="review-btn" onClick={sendToPublish}>
-            Publish
+        <div>
+          <div className="btns">
+            <div className="review-btn" onClick={sendToPublish}>
+              Publish
+            </div>
+          </div>
+          <div className={"reviewers cl-detail-section"}>
+            <span
+              style={{ fontSize: "14px", color: "white", marginLeft: "10px" }}
+            >
+              Reason For Change
+            </span>
+            <input
+              className="full-width-control name-control"
+              type="text"
+              placeholder="Reason For Change"
+              value={rfc}
+              onChange={(e) => setRFC(e.target.value)}
+            ></input>
           </div>
         </div>
       )}

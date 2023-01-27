@@ -73,15 +73,22 @@
 
 .stage-detail-container {
   width: 30%;
-  height: 85px;
+  /* height: 85px; */
   background-color: #e9e7fd;
   border-radius: 20px;
-  margin: 10px 20px 0px 20px;
+  margin: 10px 20px auto 20px;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .stage-nm > input {
+  color: #b0abf8;
+  outline-color: #b0abf8;
+}
+
+.stage-nm > select {
   color: #b0abf8;
   outline-color: #b0abf8;
 }

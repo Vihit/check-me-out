@@ -111,6 +111,7 @@ textarea::placeholder {
 
 .submit {
   border-radius: 20px;
+  border: none;
   background-color: #007c8e;
   padding: 5px 20px 5px 20px;
   text-align: center;

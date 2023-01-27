@@ -15,6 +15,9 @@ function CreatedChecklists() {
   const [archiveToggleVal, setArchiveToggleVal] = useState(false);
   let userRole = JSON.parse(localStorage.getItem("user"))["role"][0];
 
+  useEffect(() => {
+    getChecklists();
+  }, []);
   function toggle(what) {
     if (what === "Pub") {
       setPubToggleVal(!pubToggleVal);
@@ -25,6 +28,29 @@ function CreatedChecklists() {
     } else {
       setReviewToggleVal(!reviewToggleVal);
     }
+  }
+
+  function getChecklists() {
+    fetch(config.apiUrl + "checklist/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("access")).access_token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          localStorage.clear();
+          history.push("/");
+        }
+      })
+      .then((actualData) => {
+        clCtx.setContextChecklists(actualData);
+      });
   }
 
   function createNew() {
